@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ÉMMÉ CONNECT</title>
+    <title>ÉMMÉ CONNECT - Chat</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
+        
         * {
             margin: 0;
             padding: 0;
@@ -14,15 +14,11 @@
         }
 
         :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            --danger-gradient: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
-            --warning-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --glass-bg: rgba(255, 255, 255, 0.95);
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
-            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.15);
-            --shadow-xl: 0 30px 90px rgba(0, 0, 0, 0.25);
+            --primary: #667eea;
+            --primary-dark: #764ba2;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
         }
 
         body {
@@ -65,22 +61,15 @@
         }
 
         @keyframes pageEnter {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* MESSAGING PAGE */
-        .message-container {
+        /* COMMON ELEMENTS */
+        .container {
             max-width: 640px;
             margin: 0 auto;
             padding: 80px 24px 60px;
-            position: relative;
         }
 
         .brand-logo {
@@ -103,40 +92,31 @@
             background-clip: text;
             margin-bottom: 12px;
             letter-spacing: -1px;
-            text-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
 
         .brand-tagline {
             font-size: 18px;
             color: rgba(255,255,255,0.95);
             font-weight: 500;
-            letter-spacing: 0.3px;
         }
 
-        .message-card {
-            background: var(--glass-bg);
+        .card {
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             border-radius: 24px;
-            box-shadow: var(--shadow-xl);
+            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.25);
             padding: 48px;
             border: 1px solid rgba(255,255,255,0.3);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .message-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.3);
         }
 
         .card-title {
             font-size: 24px;
             font-weight: 700;
-            color: #1a202c;
             margin-bottom: 32px;
             text-align: center;
-            letter-spacing: -0.5px;
         }
 
+        /* CATEGORY SELECTOR */
         .category-selector {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -152,37 +132,18 @@
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             text-align: center;
             background: white;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .category-option::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--primary-gradient);
-            opacity: 0;
-            transition: opacity 0.3s;
         }
 
         .category-option:hover {
-            border-color: transparent;
+            border-color: var(--primary);
             transform: translateY(-4px) scale(1.02);
             box-shadow: 0 12px 32px rgba(102, 126, 234, 0.25);
         }
 
-        .category-option:hover::before {
-            opacity: 0.05;
-        }
-
         .category-option.selected {
             border-color: transparent;
-            background: var(--primary-gradient);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             box-shadow: 0 8px 24px rgba(102, 126, 234, 0.35);
-            transform: scale(1.05);
         }
 
         .category-option.selected .category-icon,
@@ -193,21 +154,15 @@
         .category-icon {
             font-size: 36px;
             margin-bottom: 12px;
-            display: block;
-            transition: transform 0.3s;
-        }
-
-        .category-option:hover .category-icon {
-            transform: scale(1.15);
         }
 
         .category-name {
             font-size: 14px;
             font-weight: 600;
             color: #2d3748;
-            letter-spacing: 0.3px;
         }
 
+        /* FORM ELEMENTS */
         .form-group {
             margin-bottom: 28px;
         }
@@ -218,7 +173,6 @@
             font-weight: 600;
             color: #2d3748;
             margin-bottom: 10px;
-            letter-spacing: 0.2px;
         }
 
         .form-input {
@@ -227,146 +181,59 @@
             border: 2px solid #e2e8f0;
             border-radius: 12px;
             font-size: 16px;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             font-family: 'Inter', sans-serif;
-            background: white;
-            color: #1a202c;
+            transition: all 0.3s;
         }
 
         .form-input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1), 0 4px 12px rgba(102, 126, 234, 0.15);
-            transform: translateY(-2px);
-        }
-
-        .form-input::placeholder {
-            color: #a0aec0;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
         }
 
         textarea.form-input {
             min-height: 160px;
             resize: vertical;
-            font-family: 'Inter', sans-serif;
         }
 
-        .send-btn {
-            width: 100%;
+        /* BUTTONS */
+        .btn {
             padding: 18px;
-            background: var(--primary-gradient);
-            color: white;
-            border: none;
             border-radius: 12px;
             font-size: 16px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.3s;
+            border: none;
             text-transform: uppercase;
             letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
             box-shadow: 0 8px 24px rgba(102, 126, 234, 0.35);
-            position: relative;
-            overflow: hidden;
         }
 
-        .send-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.3);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .send-btn:hover::before {
-            width: 400px;
-            height: 400px;
-        }
-
-        .send-btn:hover {
+        .btn-primary:hover {
             transform: translateY(-4px);
             box-shadow: 0 16px 40px rgba(102, 126, 234, 0.5);
         }
 
-        .send-btn:active {
-            transform: translateY(-2px);
-        }
-
-        .send-btn:disabled {
+        .btn:disabled {
             background: #cbd5e0;
             cursor: not-allowed;
             transform: none;
-            box-shadow: none;
         }
 
-        .send-btn span {
-            position: relative;
-            z-index: 1;
-        }
-
-        /* SUCCESS TOAST */
-        .success-toast {
-            position: fixed;
-            top: 24px;
-            right: 24px;
-            background: white;
-            padding: 20px 28px;
-            border-radius: 16px;
-            box-shadow: var(--shadow-xl);
-            display: none;
-            align-items: center;
-            gap: 16px;
-            z-index: 10000;
-            animation: toastSlide 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            border-left: 4px solid #38ef7d;
-        }
-
-        .success-toast.show {
-            display: flex;
-        }
-
-        @keyframes toastSlide {
-            from {
-                opacity: 0;
-                transform: translateX(100px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .toast-icon {
-            font-size: 28px;
-            animation: iconBounce 0.6s ease;
-        }
-
-        @keyframes iconBounce {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-        }
-
-        .toast-content h4 {
-            font-weight: 700;
-            color: #1a202c;
-            margin-bottom: 4px;
-        }
-
-        .toast-content p {
-            font-size: 13px;
-            color: #718096;
-        }
-
-        /* ADMIN PAGE */
+        /* ADMIN HEADER */
         .admin-header {
-            background: var(--glass-bg);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(255,255,255,0.2);
             padding: 24px 0;
-            box-shadow: var(--shadow-md);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -384,12 +251,10 @@
         .admin-branding h1 {
             font-size: 28px;
             font-weight: 800;
-            background: var(--primary-gradient);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 4px;
-            letter-spacing: -0.5px;
         }
 
         .admin-subtitle {
@@ -401,7 +266,6 @@
         .header-actions {
             display: flex;
             gap: 12px;
-            align-items: center;
         }
 
         .notification-bell {
@@ -411,48 +275,29 @@
             border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s;
-            border: 1px solid #e2e8f0;
-        }
-
-        .notification-bell:hover {
-            background: var(--primary-gradient);
-            transform: scale(1.05);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .notification-bell:hover span {
-            filter: brightness(0) invert(1);
         }
 
         .notification-badge {
             position: absolute;
             top: -6px;
             right: -6px;
-            background: var(--danger-gradient);
+            background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
             color: white;
             font-size: 11px;
             font-weight: 700;
             padding: 4px 8px;
             border-radius: 12px;
             min-width: 24px;
-            text-align: center;
             animation: badgePulse 2s infinite;
-            box-shadow: 0 4px 12px rgba(238, 9, 121, 0.4);
         }
 
         @keyframes badgePulse {
-            0%, 100% {
-                transform: scale(1);
-                box-shadow: 0 4px 12px rgba(238, 9, 121, 0.4);
-            }
-            50% {
-                transform: scale(1.1);
-                box-shadow: 0 8px 20px rgba(238, 9, 121, 0.6);
-            }
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
         .logout-btn {
-            background: var(--primary-gradient);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 12px 24px;
             border: none;
@@ -460,22 +305,15 @@
             cursor: pointer;
             font-size: 14px;
             font-weight: 600;
-            transition: all 0.3s;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
 
-        .logout-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-        }
-
+        /* STATS */
         .admin-container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 48px 40px;
         }
 
-        /* STATS GRID */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -487,51 +325,24 @@
             background: white;
             padding: 32px;
             border-radius: 20px;
-            box-shadow: var(--shadow-md);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            border: 1px solid #f1f5f9;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: var(--primary-gradient);
-            transform: scaleY(0);
-            transition: transform 0.4s;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s;
         }
 
         .stat-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .stat-card:hover::before {
-            transform: scaleY(1);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
         }
 
         .stat-icon {
             font-size: 40px;
             margin-bottom: 16px;
-            display: inline-block;
-            animation: iconFloat 3s ease-in-out infinite;
-        }
-
-        @keyframes iconFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
         }
 
         .stat-label {
             font-size: 13px;
             color: #64748b;
             text-transform: uppercase;
-            letter-spacing: 1px;
             font-weight: 700;
             margin-bottom: 12px;
         }
@@ -539,20 +350,18 @@
         .stat-value {
             font-size: 40px;
             font-weight: 800;
-            background: var(--primary-gradient);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            letter-spacing: -1px;
         }
 
-        /* MESSAGES SECTION */
+        /* MESSAGES */
         .messages-section {
             background: white;
             border-radius: 20px;
-            box-shadow: var(--shadow-md);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
             overflow: hidden;
-            border: 1px solid #f1f5f9;
         }
 
         .messages-header {
@@ -567,8 +376,6 @@
         .messages-title {
             font-size: 22px;
             font-weight: 700;
-            color: #1a202c;
-            letter-spacing: -0.5px;
         }
 
         .filter-tabs {
@@ -588,16 +395,10 @@
             font-size: 14px;
             font-weight: 600;
             transition: all 0.3s;
-            color: #64748b;
-        }
-
-        .filter-tab:hover {
-            color: #1a202c;
-            background: rgba(102, 126, 234, 0.1);
         }
 
         .filter-tab.active {
-            background: var(--primary-gradient);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
@@ -607,26 +408,11 @@
             overflow-y: auto;
         }
 
-        .messages-list::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .messages-list::-webkit-scrollbar-track {
-            background: #f8fafc;
-        }
-
-        .messages-list::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 4px;
-        }
-
         /* MESSAGE ITEM */
         .message-item {
             padding: 28px 32px;
             border-bottom: 1px solid #f1f5f9;
             transition: all 0.3s;
-            cursor: pointer;
-            position: relative;
         }
 
         .message-item:hover {
@@ -635,7 +421,7 @@
 
         .message-item.unread {
             background: linear-gradient(90deg, rgba(102, 126, 234, 0.05) 0%, transparent 100%);
-            border-left: 4px solid #667eea;
+            border-left: 4px solid var(--primary);
         }
 
         .message-item.urgent {
@@ -643,10 +429,9 @@
             border-left: 4px solid #ee0979;
         }
 
-        .message-item-header {
+        .message-header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
             margin-bottom: 16px;
         }
 
@@ -658,44 +443,22 @@
             border-radius: 10px;
             font-size: 13px;
             font-weight: 700;
-            letter-spacing: 0.3px;
         }
 
-        .category-prayer {
-            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-            color: #1976d2;
-        }
-
-        .category-question {
-            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
-            color: #f57c00;
-        }
-
-        .category-testimony {
-            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
-            color: #7b1fa2;
-        }
-
-        .category-urgent {
-            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
-            color: #c62828;
-        }
-
-        .category-other {
-            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-            color: #388e3c;
-        }
+        .category-prayer { background: #e3f2fd; color: #1976d2; }
+        .category-question { background: #fff3e0; color: #f57c00; }
+        .category-testimony { background: #f3e5f5; color: #7b1fa2; }
+        .category-urgent { background: #ffebee; color: #c62828; }
+        .category-other { background: #e8f5e9; color: #388e3c; }
 
         .message-time {
             font-size: 13px;
             color: #94a3b8;
-            font-weight: 500;
         }
 
         .message-sender {
             font-size: 16px;
             font-weight: 700;
-            color: #1a202c;
             margin-bottom: 12px;
         }
 
@@ -703,8 +466,47 @@
             font-size: 15px;
             color: #475569;
             line-height: 1.7;
+            margin-bottom: 16px;
         }
 
+        /* CONVERSATION THREAD */
+        .conversation-thread {
+            margin-top: 20px;
+            padding-left: 24px;
+            border-left: 4px solid #e2e8f0;
+        }
+
+        .reply-item {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--success);
+        }
+
+        .reply-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .reply-author {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 14px;
+        }
+
+        .reply-time {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .reply-text {
+            color: #1e293b;
+            line-height: 1.6;
+        }
+
+        /* MESSAGE ACTIONS */
         .message-actions {
             display: flex;
             gap: 12px;
@@ -712,7 +514,7 @@
         }
 
         .action-btn {
-            padding: 8px 16px;
+            padding: 10px 20px;
             border: 2px solid #e2e8f0;
             border-radius: 8px;
             background: white;
@@ -727,93 +529,201 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
+        .btn-reply {
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .btn-reply:hover {
+            background: var(--primary);
+            color: white;
+        }
+
         .mark-read {
-            color: #10b981;
-            border-color: #10b981;
+            color: var(--success);
+            border-color: var(--success);
         }
 
         .mark-read:hover {
-            background: #10b981;
+            background: var(--success);
             color: white;
+        }
+
+        /* REPLY MODAL */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 30px 90px rgba(0,0,0,0.3);
+            animation: modalSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .close-modal {
+            font-size: 32px;
+            cursor: pointer;
+            color: #94a3b8;
+            transition: all 0.3s;
+        }
+
+        .close-modal:hover {
+            color: #1a202c;
+            transform: rotate(90deg);
+        }
+
+        .original-message {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .original-message-label {
+            font-size: 12px;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .btn-cancel {
+            padding: 12px 24px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-send {
+            padding: 12px 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            background: white;
+            padding: 20px 28px;
+            border-radius: 16px;
+            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.25);
+            display: none;
+            align-items: center;
+            gap: 16px;
+            z-index: 10001;
+            animation: toastSlide 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .toast.show {
+            display: flex;
+        }
+
+        @keyframes toastSlide {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         .no-data {
             text-align: center;
             padding: 80px 20px;
             color: #94a3b8;
-            font-size: 16px;
         }
 
-        /* NOTIFICATION POPUP */
-        .notification-popup {
-            position: fixed;
-            top: 100px;
-            right: 24px;
+        /* CHECK RESPONSES PAGE */
+        .check-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 80px 24px;
+        }
+
+        .conversation-card {
             background: white;
-            padding: 24px;
-            border-radius: 16px;
-            box-shadow: var(--shadow-xl);
-            min-width: 360px;
-            z-index: 10001;
-            display: none;
-            animation: popupSlide 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
         }
 
-        .notification-popup.show {
-            display: block;
-        }
-
-        @keyframes popupSlide {
-            from {
-                opacity: 0;
-                transform: translateX(100px) scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0) scale(1);
-            }
-        }
-
-        .notification-popup-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid #f1f5f9;
-        }
-
-        .notification-title {
-            font-size: 18px;
+        .new-reply-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
             font-weight: 700;
-            color: #1a202c;
-        }
-
-        .close-notification {
-            cursor: pointer;
-            font-size: 24px;
-            color: #94a3b8;
-            transition: all 0.3s;
-        }
-
-        .close-notification:hover {
-            color: #1a202c;
-            transform: rotate(90deg);
-        }
-
-        .notification-body {
-            font-size: 14px;
-            color: #475569;
-            line-height: 1.6;
+            margin-left: 12px;
+            animation: badgePulse 2s infinite;
         }
 
         @media (max-width: 768px) {
-            .message-container {
+            .container {
                 padding: 60px 20px 40px;
             }
 
-            .message-card {
+            .card {
                 padding: 32px 24px;
             }
 
@@ -837,43 +747,36 @@
                 flex-wrap: wrap;
             }
 
-            .notification-popup {
-                right: 12px;
-                left: 12px;
-                min-width: auto;
-            }
-
-            .success-toast {
-                right: 12px;
-                left: 12px;
+            .modal-content {
+                padding: 24px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- SUCCESS TOAST -->
-    <div class="success-toast" id="success-toast">
-        <div class="toast-icon">✅</div>
-        <div class="toast-content">
-            <h4>Message envoyé!</h4>
-            <p>Votre message a été reçu avec succès</p>
+    <!-- TOAST -->
+    <div class="toast" id="toast">
+        <div style="font-size: 24px;">✅</div>
+        <div>
+            <div style="font-weight: 700;">Succès!</div>
+            <div style="font-size: 13px; color: #64748b;" id="toast-message"></div>
         </div>
     </div>
 
-    <!-- MESSAGING PAGE (PUBLIC) -->
-    <div id="messaging-page" class="page active">
-        <div class="message-container">
+    <!-- SEND MESSAGE PAGE -->
+    <div id="send-page" class="page active">
+        <div class="container">
             <div class="brand-logo">
                 <h1>✨ ÉMMÉ CONNECT</h1>
                 <p class="brand-tagline">Votre voix compte</p>
             </div>
 
-            <div class="message-card">
-                <h2 class="card-title">Envoyez un message au podium</h2>
+            <div class="card">
+                <h2 class="card-title">Envoyez un message</h2>
                 
                 <form id="message-form">
                     <div class="form-group">
-                        <label class="form-label">Choisissez une catégorie</label>
+                        <label class="form-label">Catégorie</label>
                         <div class="category-selector">
                             <div class="category-option" data-category="prayer">
                                 <span class="category-icon">🙏</span>
@@ -896,37 +799,61 @@
                                 <div class="category-name">Autre</div>
                             </div>
                         </div>
-                        <input type="hidden" id="category" name="category" required>
+                        <input type="hidden" id="category" required>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="sender-name">Votre nom (optionnel)</label>
-                        <input type="text" id="sender-name" name="sender" class="form-input" placeholder="Anonyme si vide">
+                        <input type="text" id="sender-name" class="form-input" placeholder="Anonyme">
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="message-text">Votre message</label>
-                        <textarea id="message-text" name="message" class="form-input" placeholder="Écrivez votre message ici..." required></textarea>
+                        <textarea id="message-text" class="form-input" placeholder="Écrivez ici..." required></textarea>
                     </div>
 
-                    <button type="submit" class="send-btn" id="send-btn">
-                        <span>📤 Envoyer</span>
+                    <button type="submit" class="btn btn-primary" id="send-btn">
+                        📤 Envoyer
                     </button>
                 </form>
+
+                <div style="text-align: center; margin-top: 24px;">
+                    <a href="?mes-messages" style="color: white; text-decoration: none; font-weight: 600;">
+                        💬 Voir mes messages et réponses
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- ADMIN MESSAGES PAGE -->
-    <div id="admin-messages-page" class="page">
+    <!-- CHECK MESSAGES PAGE -->
+    <div id="check-page" class="page">
+        <div class="check-container">
+            <div class="brand-logo">
+                <h1>💬 Mes Messages</h1>
+                <p class="brand-tagline">Vos conversations</p>
+            </div>
+
+            <div id="my-messages-list"></div>
+
+            <div style="text-align: center; margin-top: 32px;">
+                <a href="?" style="color: white; text-decoration: none; font-weight: 600;">
+                    ← Envoyer un nouveau message
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN PAGE -->
+    <div id="admin-page" class="page">
         <div class="admin-header">
             <div class="admin-header-content">
                 <div class="admin-branding">
                     <h1>ÉMMÉ CONNECT</h1>
-                    <div class="admin-subtitle">Tableau de bord en temps réel</div>
+                    <div class="admin-subtitle">Tableau de bord</div>
                 </div>
                 <div class="header-actions">
-                    <div class="notification-bell" onclick="toggleNotifications()">
+                    <div class="notification-bell">
                         <span style="font-size: 20px;">🔔</span>
                         <div class="notification-badge" id="notification-count">0</div>
                     </div>
@@ -969,37 +896,57 @@
                     </div>
                 </div>
                 <div class="messages-list" id="messages-list">
-                    <div class="no-data">📭 Aucun message pour le moment</div>
+                    <div class="no-data">📭 Aucun message</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- NOTIFICATION POPUP -->
-    <div class="notification-popup" id="notification-popup">
-        <div class="notification-popup-header">
-            <div class="notification-title">🔔 Nouveau Message</div>
-            <div class="close-notification" onclick="closeNotificationPopup()">×</div>
+    <!-- REPLY MODAL -->
+    <div class="modal" id="reply-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">💬 Répondre</div>
+                <div class="close-modal" onclick="closeReplyModal()">×</div>
+            </div>
+
+            <div class="original-message" id="original-message"></div>
+
+            <div class="form-group">
+                <label class="form-label">Votre réponse</label>
+                <textarea id="reply-text" class="form-input" placeholder="Écrivez votre réponse..." style="min-height: 120px;"></textarea>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeReplyModal()">Annuler</button>
+                <button class="btn-send" onclick="sendReply()">Envoyer</button>
+            </div>
         </div>
-        <div class="notification-body" id="notification-body"></div>
     </div>
 
     <script>
         let allMessages = [];
         let currentFilter = 'all';
         let checkInterval = null;
+        let currentReplyMessageId = null;
 
+        // Route handling
         window.addEventListener('load', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('admin-messages')) {
+            const params = new URLSearchParams(window.location.search);
+            
+            if (params.has('admin-messages')) {
                 showAdminLogin();
+            } else if (params.has('mes-messages')) {
+                showMyMessages();
+            } else {
+                document.getElementById('send-page').classList.add('active');
             }
         });
 
         function showAdminLogin() {
             const password = prompt('🔐 Mot de passe administrateur:');
             if (password === 'admin123') {
-                switchToAdminMessages();
+                switchToAdmin();
             } else if (password !== null) {
                 alert('❌ Mot de passe incorrect!');
                 window.location.href = window.location.pathname;
@@ -1008,9 +955,9 @@
             }
         }
 
-        function switchToAdminMessages() {
-            document.getElementById('messaging-page').classList.remove('active');
-            document.getElementById('admin-messages-page').classList.add('active');
+        function switchToAdmin() {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('admin-page').classList.add('active');
             loadMessages();
             startAutoRefresh();
             if (!window.location.search.includes('admin-messages')) {
@@ -1018,13 +965,24 @@
             }
         }
 
+        function showMyMessages() {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('check-page').classList.add('active');
+            displayMyMessages();
+            
+            // Auto-refresh every 3 seconds to check for new replies
+            if (checkInterval) clearInterval(checkInterval);
+            checkInterval = setInterval(() => {
+                displayMyMessages();
+            }, 3000);
+        }
+
         function logout() {
             if (checkInterval) clearInterval(checkInterval);
-            document.getElementById('admin-messages-page').classList.remove('active');
-            document.getElementById('messaging-page').classList.add('active');
             window.location.href = window.location.pathname;
         }
 
+        // Category selection
         document.querySelectorAll('.category-option').forEach(option => {
             option.addEventListener('click', function() {
                 document.querySelectorAll('.category-option').forEach(opt => {
@@ -1035,6 +993,7 @@
             });
         });
 
+        // Send message
         document.getElementById('message-form').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -1046,7 +1005,7 @@
 
             const submitBtn = document.getElementById('send-btn');
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span>⏳ Envoi...</span>';
+            submitBtn.textContent = '⏳ Envoi...';
 
             const data = {
                 id: Date.now(),
@@ -1054,7 +1013,8 @@
                 sender: document.getElementById('sender-name').value || 'Anonyme',
                 message: document.getElementById('message-text').value,
                 timestamp: new Date().toISOString(),
-                read: false
+                read: false,
+                replies: []
             };
 
             try {
@@ -1062,11 +1022,12 @@
                 messages.unshift(data);
                 localStorage.setItem('emme_messages', JSON.stringify(messages));
 
-                const toast = document.getElementById('success-toast');
-                toast.classList.add('show');
-                setTimeout(() => {
-                    toast.classList.remove('show');
-                }, 3000);
+                // Save message ID for user to check later
+                let myMessages = JSON.parse(localStorage.getItem('my_messages') || '[]');
+                myMessages.push(data.id);
+                localStorage.setItem('my_messages', JSON.stringify(myMessages));
+
+                showToast('Message envoyé avec succès!');
 
                 this.reset();
                 document.querySelectorAll('.category-option').forEach(opt => {
@@ -1074,14 +1035,22 @@
                 });
 
             } catch (error) {
-                console.error("Erreur:", error);
-                alert('Erreur lors de l\'envoi. Veuillez réessayer.');
+                alert('Erreur lors de l\'envoi.');
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = '<span>📤 Envoyer</span>';
+                submitBtn.textContent = '📤 Envoyer';
             }
         });
 
+        function showToast(message) {
+            document.getElementById('toast-message').textContent = message;
+            document.getElementById('toast').classList.add('show');
+            setTimeout(() => {
+                document.getElementById('toast').classList.remove('show');
+            }, 3000);
+        }
+
+        // Admin functions
         function loadMessages() {
             allMessages = JSON.parse(localStorage.getItem('emme_messages') || '[]');
             updateStatistics();
@@ -1090,71 +1059,8 @@
 
         function startAutoRefresh() {
             checkInterval = setInterval(() => {
-                const oldCount = allMessages.length;
                 loadMessages();
-                const newCount = allMessages.length;
-
-                if (newCount > oldCount) {
-                    const newMessage = allMessages[0];
-                    showNotification(newMessage);
-                    playNotificationSound();
-                    vibrateDevice();
-                }
-            }, 2000);
-        }
-
-        function showNotification(message) {
-            const categoryIcons = {
-                prayer: '🙏',
-                question: '❓',
-                testimony: '💡',
-                urgent: '🚨',
-                other: '💬'
-            };
-
-            const popup = document.getElementById('notification-popup');
-            const body = document.getElementById('notification-body');
-            
-            body.innerHTML = `
-                <div style="margin-bottom: 12px;">
-                    <strong style="font-size: 16px;">${categoryIcons[message.category] || '💬'} ${getCategoryName(message.category)}</strong>
-                </div>
-                <div style="font-size: 13px; color: #94a3b8; margin-bottom: 12px;">
-                    De: ${message.sender}
-                </div>
-                <div style="color: #475569;">${message.message.substring(0, 100)}${message.message.length > 100 ? '...' : ''}</div>
-            `;
-
-            popup.classList.add('show');
-
-            setTimeout(() => {
-                popup.classList.remove('show');
-            }, 5000);
-        }
-
-        function closeNotificationPopup() {
-            document.getElementById('notification-popup').classList.remove('show');
-        }
-
-        function playNotificationSound() {
-            const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBi6L0vHPlkDMSxFbotv6tXIlBDOF0fDTlklCr1YcgFRx5NGUWhdWrdn5wm4hBCJ/zfLZmD4KD1LMQW2eOABJktH1snUlBDKC0PDUkUcKrFcbgFhw6dKZWBdWrtn5wm4hBCN/zfLZlUcPD1LMQWueSxJJktH1snElBDeC0PDUk04');
-            audio.play().catch(() => {});
-        }
-
-        function vibrateDevice() {
-            if ('vibrate' in navigator) {
-                navigator.vibrate([200, 100, 200]);
-            }
-        }
-
-        function toggleNotifications() {
-            const popup = document.getElementById('notification-popup');
-            if (popup.classList.contains('show')) {
-                popup.classList.remove('show');
-            } else {
-                document.getElementById('notification-body').innerHTML = 'Aucune nouvelle notification';
-                popup.classList.add('show');
-            }
+            }, 3000);
         }
 
         function updateStatistics() {
@@ -1168,6 +1074,70 @@
             document.getElementById('prayer-count').textContent = prayers;
             document.getElementById('urgent-count').textContent = urgent;
             document.getElementById('notification-count').textContent = unread;
+        }
+
+        function displayMessages() {
+            const container = document.getElementById('messages-list');
+
+            let filtered = allMessages;
+            if (currentFilter === 'unread') {
+                filtered = allMessages.filter(m => !m.read);
+            } else if (currentFilter === 'urgent') {
+                filtered = allMessages.filter(m => m.category === 'urgent');
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="no-data">📭 Aucun message trouvé</div>';
+                return;
+            }
+
+            container.innerHTML = filtered.map(msg => {
+                const date = new Date(msg.timestamp);
+                const timeStr = date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+                const dateStr = date.toLocaleDateString('fr-FR');
+
+                return `
+                    <div class="message-item ${!msg.read ? 'unread' : ''} ${msg.category === 'urgent' ? 'urgent' : ''}">
+                        <div class="message-header">
+                            <span class="message-category category-${msg.category}">
+                                ${getCategoryIcon(msg.category)} ${getCategoryName(msg.category)}
+                            </span>
+                            <span class="message-time">${timeStr} • ${dateStr}</span>
+                        </div>
+                        <div class="message-sender">${msg.sender}</div>
+                        <div class="message-content">${msg.message}</div>
+                        
+                        ${msg.replies && msg.replies.length > 0 ? `
+                        <div class="conversation-thread">
+                            ${msg.replies.map(reply => {
+                                const replyDate = new Date(reply.timestamp);
+                                const replyTime = replyDate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+                                return `
+                                    <div class="reply-item">
+                                        <div class="reply-header">
+                                            <span class="reply-author">👤 Admin</span>
+                                            <span class="reply-time">${replyTime}</span>
+                                        </div>
+                                        <div class="reply-text">${reply.text}</div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                        ` : ''}
+                        
+                        <div class="message-actions">
+                            <button class="action-btn btn-reply" onclick="openReplyModal(${msg.id})">
+                                💬 Répondre
+                            </button>
+                            ${!msg.read ? `
+                            <button class="action-btn mark-read" onclick="markAsRead(${msg.id})">
+                                ✓ Marquer comme lu
+                            </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
 
         function getCategoryName(category) {
@@ -1192,48 +1162,6 @@
             return icons[category] || '💬';
         }
 
-        function displayMessages() {
-            const container = document.getElementById('messages-list');
-
-            let filtered = allMessages;
-            if (currentFilter === 'unread') {
-                filtered = allMessages.filter(m => !m.read);
-            } else if (currentFilter === 'urgent') {
-                filtered = allMessages.filter(m => m.category === 'urgent');
-            }
-
-            if (filtered.length === 0) {
-                container.innerHTML = '<div class="no-data">📭 Aucun message trouvé</div>';
-                return;
-            }
-
-            container.innerHTML = filtered.map(msg => {
-                const date = new Date(msg.timestamp);
-                const timeStr = date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-                const dateStr = date.toLocaleDateString('fr-FR');
-
-                return `
-                    <div class="message-item ${!msg.read ? 'unread' : ''} ${msg.category === 'urgent' ? 'urgent' : ''}" onclick="markAsRead(${msg.id})">
-                        <div class="message-item-header">
-                            <span class="message-category category-${msg.category}">
-                                ${getCategoryIcon(msg.category)} ${getCategoryName(msg.category)}
-                            </span>
-                            <span class="message-time">${timeStr} • ${dateStr}</span>
-                        </div>
-                        <div class="message-sender">${msg.sender}</div>
-                        <div class="message-content">${msg.message}</div>
-                        ${!msg.read ? `
-                        <div class="message-actions">
-                            <button class="action-btn mark-read" onclick="event.stopPropagation(); markAsRead(${msg.id})">
-                                ✓ Marquer comme lu
-                            </button>
-                        </div>
-                        ` : ''}
-                    </div>
-                `;
-            }).join('');
-        }
-
         function markAsRead(messageId) {
             let messages = JSON.parse(localStorage.getItem('emme_messages') || '[]');
             const index = messages.findIndex(m => m.id === messageId);
@@ -1251,6 +1179,140 @@
             });
             event.target.classList.add('active');
             displayMessages();
+        }
+
+        // Reply modal
+        function openReplyModal(messageId) {
+            currentReplyMessageId = messageId;
+            const message = allMessages.find(m => m.id === messageId);
+            
+            if (message) {
+                document.getElementById('original-message').innerHTML = `
+                    <div class="original-message-label">Message original de ${message.sender}</div>
+                    <div style="color: #475569; line-height: 1.6;">${message.message}</div>
+                `;
+                document.getElementById('reply-text').value = '';
+                document.getElementById('reply-modal').classList.add('show');
+            }
+        }
+
+        function closeReplyModal() {
+            document.getElementById('reply-modal').classList.remove('show');
+            currentReplyMessageId = null;
+        }
+
+        function sendReply() {
+            const replyText = document.getElementById('reply-text').value.trim();
+            
+            if (!replyText) {
+                alert('Veuillez écrire une réponse');
+                return;
+            }
+
+            let messages = JSON.parse(localStorage.getItem('emme_messages') || '[]');
+            const index = messages.findIndex(m => m.id === currentReplyMessageId);
+            
+            if (index !== -1) {
+                if (!messages[index].replies) {
+                    messages[index].replies = [];
+                }
+                
+                messages[index].replies.push({
+                    text: replyText,
+                    timestamp: new Date().toISOString(),
+                    admin: true
+                });
+                
+                localStorage.setItem('emme_messages', JSON.stringify(messages));
+                
+                showToast('Réponse envoyée!');
+                closeReplyModal();
+                loadMessages();
+            }
+        }
+
+        // Display user's messages
+        function displayMyMessages() {
+            const myMessageIds = JSON.parse(localStorage.getItem('my_messages') || '[]');
+            const allMessages = JSON.parse(localStorage.getItem('emme_messages') || '[]');
+            
+            const myConversations = allMessages.filter(m => myMessageIds.includes(m.id));
+
+            const container = document.getElementById('my-messages-list');
+
+            if (myConversations.length === 0) {
+                container.innerHTML = `
+                    <div class="card">
+                        <div class="no-data">
+                            📭 Vous n'avez pas encore envoyé de messages
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Check for new replies and play sound
+            const previousRepliesCount = parseInt(localStorage.getItem('previous_replies_count') || '0');
+            const currentRepliesCount = myConversations.reduce((total, msg) => 
+                total + (msg.replies ? msg.replies.length : 0), 0);
+            
+            if (currentRepliesCount > previousRepliesCount && previousRepliesCount > 0) {
+                playNotificationSound();
+                showToast('💬 Nouvelle réponse reçue!');
+            }
+            localStorage.setItem('previous_replies_count', currentRepliesCount.toString());
+
+            container.innerHTML = myConversations.map(msg => {
+                const hasNewReplies = msg.replies && msg.replies.length > 0;
+                const date = new Date(msg.timestamp);
+                const dateStr = date.toLocaleDateString('fr-FR');
+
+                return `
+                    <div class="conversation-card">
+                        <div class="message-header">
+                            <span class="message-category category-${msg.category}">
+                                ${getCategoryIcon(msg.category)} ${getCategoryName(msg.category)}
+                            </span>
+                            <span class="message-time">${dateStr}</span>
+                        </div>
+                        
+                        <div class="message-content" style="margin: 16px 0;">
+                            <strong>Votre message:</strong><br>
+                            ${msg.message}
+                        </div>
+
+                        ${hasNewReplies ? `
+                        <div class="conversation-thread">
+                            <div style="margin-bottom: 12px; font-weight: 700; color: var(--primary);">
+                                💬 Réponses (${msg.replies.length})
+                            </div>
+                            ${msg.replies.map(reply => {
+                                const replyDate = new Date(reply.timestamp);
+                                const replyTime = replyDate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+                                return `
+                                    <div class="reply-item" style="animation: slideIn 0.4s ease;">
+                                        <div class="reply-header">
+                                            <span class="reply-author">👤 Admin</span>
+                                            <span class="reply-time">${replyTime}</span>
+                                        </div>
+                                        <div class="reply-text">${reply.text}</div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                        ` : `
+                        <div style="color: #94a3b8; font-style: italic; margin-top: 16px;">
+                            ⏳ En attente de réponse...
+                        </div>
+                        `}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function playNotificationSound() {
+            const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBi6L0vHPlkDMSxFbotv6tXIlBDOF0fDTlklCr1YcgFRx5NGUWhdWrdn5wm4hBCJ/zfLZmD4KD1LMQW2eOABJktH1snUlBDKC0PDUkUcKrFcbgFhw6dKZWBdWrtn5wm4hBCN/zfLZlUcPD1LMQWueSxJJktH1snElBDeC0PDUk04');
+            audio.play().catch(() => {});
         }
     </script>
 </body>
