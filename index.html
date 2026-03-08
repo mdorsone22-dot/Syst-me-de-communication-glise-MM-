@@ -764,7 +764,7 @@
     </div>
 
     <!-- SEND MESSAGE PAGE -->
-    <div id="send-page" class="page active">
+    <div id="send-page" class="page">
         <div class="container">
             <div class="brand-logo">
                 <h1>✨ ÉMMÉ CONNECT</h1>
@@ -939,6 +939,7 @@
             } else if (params.has('mes-messages')) {
                 showMyMessages();
             } else {
+                // Default: show send message page
                 document.getElementById('send-page').classList.add('active');
             }
         });
