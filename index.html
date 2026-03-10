@@ -418,6 +418,10 @@
                                 <span class="category-icon">🚨</span>
                                 <div class="category-name">Urgence</div>
                             </div>
+                            <div class="category-option" data-category="other">
+                                <span class="category-icon">💬</span>
+                                <div class="category-name">Autre</div>
+                            </div>
                         </div>
                         <input type="hidden" id="msg-category" required>
                     </div>
@@ -431,6 +435,27 @@
                     </div>
                     <button type="submit" class="btn-primary" id="msg-btn">📤 Envoyer</button>
                 </form>
+                <div style="text-align: center; margin-top: 24px;">
+                    <a href="?mes-messages" style="color: white; text-decoration: none; font-weight: 600;">
+                        💬 Voir mes messages et réponses
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MES MESSAGES PAGE -->
+    <div id="mes-messages-page" class="page">
+        <div class="container">
+            <div class="brand-logo">
+                <h1>💬 Mes Messages</h1>
+                <p class="brand-tagline">Vos conversations</p>
+            </div>
+            <div id="my-messages-container"></div>
+            <div style="text-align: center; margin-top: 32px;">
+                <a href="?messages" style="color: white; text-decoration: none; font-weight: 600;">
+                    ← Envoyer un nouveau message
+                </a>
             </div>
         </div>
     </div>
@@ -585,6 +610,10 @@
                 showAdminLogin();
             } else if (params.has('visiteur')) {
                 showPage('visitor-page');
+            } else if (params.has('mes-messages')) {
+                showPage('mes-messages-page');
+                displayMyMessages();
+                startMyMessagesRefresh();
             } else if (params.has('messages')) {
                 showPage('message-page');
             } else {
@@ -659,6 +688,11 @@
             messages.unshift(data);
             localStorage.setItem('emme_messages', JSON.stringify(messages));
 
+            // Save message ID for user to check later
+            let myMessages = JSON.parse(localStorage.getItem('my_messages') || '[]');
+            myMessages.push(data.id);
+            localStorage.setItem('my_messages', JSON.stringify(myMessages));
+
             showToast('Message envoyé!');
             this.reset();
             document.querySelectorAll('.category-option').forEach(opt => opt.classList.remove('selected'));
@@ -714,8 +748,8 @@
 
             list.innerHTML = messages.map(msg => {
                 const date = new Date(msg.timestamp);
-                const categoryIcons = { prayer: '🙏', question: '❓', testimony: '💡', urgent: '🚨' };
-                const categoryNames = { prayer: 'Prière', question: 'Question', testimony: 'Témoignage', urgent: 'Urgence' };
+                const categoryIcons = { prayer: '🙏', question: '❓', testimony: '💡', urgent: '🚨', other: '💬' };
+                const categoryNames = { prayer: 'Prière', question: 'Question', testimony: 'Témoignage', urgent: 'Urgence', other: 'Autre' };
                 
                 return `
                     <div class="data-item">
@@ -724,10 +758,46 @@
                             <span style="color: #94a3b8; font-size: 14px;">${date.toLocaleString('fr-FR')}</span>
                         </div>
                         <div style="font-weight: 600; margin-bottom: 8px;">De: ${msg.sender}</div>
-                        <div style="color: #475569;">${msg.message}</div>
+                        <div style="color: #475569; margin-bottom: 12px;">${msg.message}</div>
+                        ${msg.replies && msg.replies.length > 0 ? `
+                        <div style="border-left: 4px solid #10b981; padding-left: 16px; margin: 12px 0;">
+                            ${msg.replies.map(r => {
+                                const rd = new Date(r.timestamp);
+                                return `<div style="background: #f0f9ff; padding: 12px; border-radius: 8px; margin-bottom: 8px;">
+                                    <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">Admin - ${rd.toLocaleTimeString('fr-FR')}</div>
+                                    <div>${r.text}</div>
+                                </div>`;
+                            }).join('')}
+                        </div>
+                        ` : ''}
+                        <button onclick="replyToMessage(${msg.id}, '${msg.sender.replace(/'/g, "\\'")}', '${msg.message.replace(/'/g, "\\'").replace(/\n/g, ' ')}')" 
+                                style="padding: 8px 16px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                            💬 Répondre
+                        </button>
                     </div>
                 `;
             }).join('');
+        }
+
+        function replyToMessage(msgId, sender, message) {
+            const replyText = prompt(`Répondre à ${sender}:\n\n"${message.substring(0, 100)}..."\n\nVotre réponse:`);
+            
+            if (!replyText || !replyText.trim()) return;
+
+            let messages = JSON.parse(localStorage.getItem('emme_messages') || '[]');
+            const index = messages.findIndex(m => m.id === msgId);
+            
+            if (index !== -1) {
+                if (!messages[index].replies) messages[index].replies = [];
+                messages[index].replies.push({
+                    text: replyText.trim(),
+                    timestamp: new Date().toISOString(),
+                    admin: true
+                });
+                localStorage.setItem('emme_messages', JSON.stringify(messages));
+                showToast('Réponse envoyée!');
+                loadMessages();
+            }
         }
 
         function loadVisitors() {
@@ -761,6 +831,75 @@
                             <strong>Membre:</strong> ${v.membre}
                         </div>
                         ${v.commentaires ? `<div style="color: #64748b; font-style: italic; margin-top: 8px;">${v.commentaires}</div>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // USER MESSAGES PAGE
+        let myMessagesInterval;
+
+        function startMyMessagesRefresh() {
+            displayMyMessages();
+            myMessagesInterval = setInterval(displayMyMessages, 3000);
+        }
+
+        function displayMyMessages() {
+            const myMessageIds = JSON.parse(localStorage.getItem('my_messages') || '[]');
+            const allMessages = JSON.parse(localStorage.getItem('emme_messages') || '[]');
+            const myConversations = allMessages.filter(m => myMessageIds.includes(m.id));
+
+            const container = document.getElementById('my-messages-container');
+
+            if (myConversations.length === 0) {
+                container.innerHTML = `
+                    <div class="card">
+                        <div style="text-align: center; padding: 40px; color: #94a3b8;">
+                            📭 Vous n'avez pas encore envoyé de messages
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = myConversations.map(msg => {
+                const date = new Date(msg.timestamp);
+                const categoryIcons = { prayer: '🙏', question: '❓', testimony: '💡', urgent: '🚨', other: '💬' };
+                const categoryNames = { prayer: 'Prière', question: 'Question', testimony: 'Témoignage', urgent: 'Urgence', other: 'Autre' };
+
+                return `
+                    <div class="card" style="margin-bottom: 24px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+                            <span style="font-weight: 700;">${categoryIcons[msg.category]} ${categoryNames[msg.category]}</span>
+                            <span style="color: #94a3b8; font-size: 14px;">${date.toLocaleDateString('fr-FR')}</span>
+                        </div>
+                        <div style="margin-bottom: 16px;">
+                            <strong>Votre message:</strong><br>
+                            <div style="color: #475569; margin-top: 8px;">${msg.message}</div>
+                        </div>
+                        ${msg.replies && msg.replies.length > 0 ? `
+                        <div style="border-top: 2px solid #e2e8f0; padding-top: 16px; margin-top: 16px;">
+                            <div style="font-weight: 700; color: var(--primary); margin-bottom: 12px;">
+                                💬 Réponses (${msg.replies.length})
+                            </div>
+                            ${msg.replies.map(reply => {
+                                const replyDate = new Date(reply.timestamp);
+                                return `
+                                    <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); padding: 16px; border-radius: 12px; margin-bottom: 12px;">
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                            <span style="font-weight: 700; color: var(--primary);">👤 Admin</span>
+                                            <span style="color: #64748b; font-size: 12px;">${replyDate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</span>
+                                        </div>
+                                        <div style="color: #1e293b;">${reply.text}</div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                        ` : `
+                        <div style="color: #94a3b8; font-style: italic; border-top: 2px solid #e2e8f0; padding-top: 16px; margin-top: 16px;">
+                            ⏳ En attente de réponse...
+                        </div>
+                        `}
                     </div>
                 `;
             }).join('');
