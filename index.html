@@ -9,26 +9,18 @@
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        :root {
-            --primary: #667eea;
-            --primary-dark: #764ba2;
-            --success: #10b981;
-        }
-
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            color: #1a202c;
+            color: #2c3e50;
         }
 
         body::before {
             content: '';
             position: fixed;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
+            top: -50%; right: -50%;
+            width: 200%; height: 200%;
             background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
             background-size: 50px 50px;
             animation: backgroundMove 60s linear infinite;
@@ -44,17 +36,14 @@
         .page { display: none; position: relative; z-index: 1; }
         .page.active { display: block; }
 
+        /* MESSAGE FORM - SIMPLE */
         .container { max-width: 640px; margin: 0 auto; padding: 80px 24px 60px; }
-
         .brand-logo { text-align: center; margin-bottom: 48px; }
         .brand-logo h1 {
-            font-size: 48px;
-            font-weight: 800;
+            font-size: 48px; font-weight: 800;
             background: linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,0.8) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 12px;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; margin-bottom: 12px;
         }
         .brand-tagline { font-size: 18px; color: rgba(255,255,255,0.95); font-weight: 500; }
 
@@ -66,46 +55,35 @@
             padding: 48px;
             border: 1px solid rgba(255,255,255,0.3);
         }
-
         .card-title { font-size: 24px; font-weight: 700; margin-bottom: 32px; text-align: center; }
 
         .form-group { margin-bottom: 24px; }
         .form-label { display: block; font-size: 14px; font-weight: 600; color: #2d3748; margin-bottom: 10px; }
         .form-input {
-            width: 100%;
-            padding: 16px 20px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 16px;
-            font-family: 'Inter', sans-serif;
+            width: 100%; padding: 16px 20px;
+            border: 2px solid #e2e8f0; border-radius: 12px;
+            font-size: 16px; font-family: 'Inter', sans-serif;
             transition: all 0.3s;
         }
         .form-input:focus {
-            outline: none;
-            border-color: var(--primary);
+            outline: none; border-color: #667eea;
             box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
         }
         textarea.form-input { min-height: 120px; resize: vertical; }
         select.form-input { cursor: pointer; }
 
         .category-selector {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-            margin-bottom: 32px;
+            display: grid; grid-template-columns: repeat(2, 1fr);
+            gap: 16px; margin-bottom: 32px;
         }
         .category-option {
-            padding: 24px 20px;
-            border: 2px solid #e2e8f0;
-            border-radius: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
+            padding: 24px 20px; border: 2px solid #e2e8f0;
+            border-radius: 16px; cursor: pointer;
+            transition: all 0.3s; text-align: center;
             background: white;
         }
         .category-option:hover {
-            border-color: var(--primary);
-            transform: translateY(-4px);
+            border-color: #667eea; transform: translateY(-4px);
             box-shadow: 0 12px 32px rgba(102, 126, 234, 0.25);
         }
         .category-option.selected {
@@ -120,23 +98,106 @@
         .category-name { font-size: 14px; font-weight: 600; color: #2d3748; }
 
         .btn-primary {
-            width: 100%;
-            padding: 18px;
+            width: 100%; padding: 18px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
+            color: white; border: none; border-radius: 12px;
+            font-size: 16px; font-weight: 700;
+            cursor: pointer; transition: all 0.3s;
             text-transform: uppercase;
         }
         .btn-primary:hover {
             transform: translateY(-4px);
             box-shadow: 0 16px 40px rgba(102, 126, 234, 0.5);
         }
-        .btn-primary:disabled { background: #cbd5e0; cursor: not-allowed; transform: none; }
+
+        /* VISITOR FORM - DETAILED */
+        .form-container {
+            max-width: 900px; margin: 40px auto;
+            background: white;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+            border-radius: 8px; overflow: hidden;
+        }
+        .form-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; padding: 35px 50px; text-align: center;
+        }
+        .form-header h2 { font-size: 28px; font-weight: 600; margin-bottom: 8px; }
+        .form-header p { font-size: 15px; opacity: 0.95; }
+
+        .form-content { padding: 45px 50px; }
+        .form-section { margin-bottom: 35px; }
+        .section-title {
+            font-size: 18px; color: #2c3e50; margin-bottom: 20px;
+            padding-bottom: 10px; border-bottom: 2px solid #e9ecef;
+            font-weight: 600;
+        }
+        .form-row {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 20px; margin-bottom: 20px;
+        }
+        .form-row.full { grid-template-columns: 1fr; }
+
+        .required { color: #e74c3c; margin-left: 3px; }
+
+        input[type="text"], input[type="email"], input[type="tel"], textarea {
+            width: 100%; padding: 12px 14px;
+            border: 1px solid #ced4da; border-radius: 5px;
+            font-size: 15px; transition: all 0.3s;
+            background: white;
+        }
+        input:focus, textarea:focus {
+            outline: none; border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        textarea { min-height: 100px; resize: vertical; font-family: inherit; }
+
+        .radio-group, .checkbox-group {
+            display: flex; flex-direction: column;
+            gap: 10px; margin-top: 8px;
+        }
+        .radio-option, .checkbox-option {
+            display: flex; align-items: center; gap: 10px;
+            padding: 12px 14px; background: #f8f9fa;
+            border: 1px solid #dee2e6; border-radius: 5px;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .radio-option:hover, .checkbox-option:hover {
+            background: #e9ecef; border-color: #adb5bd;
+        }
+        .radio-option input, .checkbox-option input {
+            width: 18px; height: 18px; cursor: pointer;
+        }
+        .radio-option label, .checkbox-option label {
+            margin: 0; cursor: pointer; font-weight: 400;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            color: white; padding: 16px; border: none;
+            border-radius: 5px; font-size: 16px; font-weight: 600;
+            cursor: pointer; width: 100%; transition: transform 0.2s;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        .success-message {
+            display: none; background: #d4edda; color: #155724;
+            padding: 20px; margin-bottom: 25px;
+            border-left: 4px solid #28a745; border-radius: 5px;
+        }
+        .note {
+            background: #e7f3ff; padding: 15px; margin-bottom: 25px;
+            border-left: 4px solid #667eea; border-radius: 5px;
+            color: #004085; font-size: 14px;
+        }
+        .followup-section {
+            display: none; margin-top: 15px; padding: 20px;
+            background: #fff3cd; border-left: 4px solid #ffc107;
+            border-radius: 5px;
+        }
 
         /* ADMIN */
         .admin-header {
@@ -144,59 +205,37 @@
             backdrop-filter: blur(20px);
             padding: 24px 0;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            position: sticky; top: 0; z-index: 100;
         }
         .admin-header-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            max-width: 1400px; margin: 0 auto; padding: 0 40px;
+            display: flex; justify-content: space-between; align-items: center;
         }
         .admin-branding h1 {
-            font-size: 28px;
-            font-weight: 800;
+            font-size: 28px; font-weight: 800;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             background-clip: text;
         }
         .admin-subtitle { font-size: 14px; color: #64748b; }
         .logout-btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
+            color: white; padding: 12px 24px; border: none;
+            border-radius: 10px; cursor: pointer;
+            font-size: 14px; font-weight: 600;
         }
 
         .admin-container { max-width: 1400px; margin: 0 auto; padding: 40px; }
 
         .admin-tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 32px;
-            background: white;
-            padding: 8px;
-            border-radius: 12px;
+            display: flex; gap: 8px; margin-bottom: 32px;
+            background: white; padding: 8px; border-radius: 12px;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
         }
         .admin-tab {
-            flex: 1;
-            padding: 16px 32px;
-            background: transparent;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            color: #64748b;
+            flex: 1; padding: 16px 32px; background: transparent;
+            border: none; border-radius: 8px; cursor: pointer;
+            font-size: 16px; font-weight: 600; color: #64748b;
             transition: all 0.3s;
         }
         .admin-tab:hover { background: #f8fafc; }
@@ -212,26 +251,20 @@
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 24px;
-            margin-bottom: 40px;
+            gap: 24px; margin-bottom: 40px;
         }
         .stat-card {
-            background: white;
-            padding: 32px;
-            border-radius: 20px;
+            background: white; padding: 32px; border-radius: 20px;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
         }
         .stat-icon { font-size: 40px; margin-bottom: 16px; }
         .stat-label {
-            font-size: 13px;
-            color: #64748b;
-            text-transform: uppercase;
-            font-weight: 700;
+            font-size: 13px; color: #64748b;
+            text-transform: uppercase; font-weight: 700;
             margin-bottom: 12px;
         }
         .stat-value {
-            font-size: 40px;
-            font-weight: 800;
+            font-size: 40px; font-weight: 800;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -239,34 +272,35 @@
         }
 
         .data-section {
-            background: white;
-            border-radius: 20px;
+            background: white; border-radius: 20px;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
             overflow: hidden;
         }
         .section-header {
-            padding: 24px 32px;
-            border-bottom: 1px solid #f1f5f9;
+            padding: 24px 32px; border-bottom: 1px solid #f1f5f9;
             background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
         }
-        .section-title { font-size: 20px; font-weight: 700; }
+        .section-title-admin { font-size: 20px; font-weight: 700; }
 
         .data-list { max-height: 600px; overflow-y: auto; }
         .data-item { padding: 24px 32px; border-bottom: 1px solid #f1f5f9; }
         .data-item:hover { background: #f8fafc; }
 
         .toast {
-            position: fixed;
-            top: 24px;
-            right: 24px;
-            background: white;
-            padding: 20px 28px;
+            position: fixed; top: 24px; right: 24px;
+            background: white; padding: 20px 28px;
             border-radius: 16px;
             box-shadow: 0 30px 90px rgba(0, 0, 0, 0.25);
-            display: none;
-            z-index: 10001;
+            display: none; z-index: 10001;
         }
         .toast.show { display: block; }
+
+        .badge {
+            display: inline-block; padding: 4px 10px;
+            border-radius: 3px; font-size: 12px; font-weight: 600;
+        }
+        .badge-success { background: #d4edda; color: #155724; }
+        .badge-warning { background: #fff3cd; color: #856404; }
 
         @media (max-width: 768px) {
             .container { padding: 60px 20px; }
@@ -275,13 +309,16 @@
             .admin-container { padding: 24px; }
             .stats-grid { grid-template-columns: 1fr; }
             .admin-tabs { flex-direction: column; }
+            .form-container { margin: 20px; }
+            .form-content { padding: 30px 25px; }
+            .form-row { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
     <div class="toast" id="toast">✅ <span id="toast-message"></span></div>
 
-    <!-- MESSAGE FORM PAGE -->
+    <!-- MESSAGE FORM -->
     <div id="message-page" class="page">
         <div class="container">
             <div class="brand-logo">
@@ -310,6 +347,10 @@
                                 <span class="category-icon">🚨</span>
                                 <div class="category-name">Urgence</div>
                             </div>
+                            <div class="category-option" data-category="autre">
+                                <span class="category-icon">💬</span>
+                                <div class="category-name">Autre</div>
+                            </div>
                         </div>
                         <input type="hidden" id="msg-category" required>
                     </div>
@@ -319,7 +360,7 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">Votre message</label>
-                        <textarea id="msg-text" class="form-input" required placeholder="Écrivez votre message ici..."></textarea>
+                        <textarea id="msg-text" class="form-input" required></textarea>
                     </div>
                     <button type="submit" class="btn-primary">📤 Envoyer</button>
                 </form>
@@ -327,115 +368,204 @@
         </div>
     </div>
 
-    <!-- VISITOR FORM PAGE -->
+    <!-- VISITOR FORM -->
     <div id="visitor-page" class="page">
-        <div class="container">
-            <div class="brand-logo">
-                <h1>👥 Famille ÉMMÉ</h1>
-                <p class="brand-tagline">Registre des visiteurs</p>
+        <div class="form-container">
+            <div class="form-header">
+                <h2>Famille ÉMMÉ</h2>
+                <p>Formulaire de Registre de Visiteurs</p>
             </div>
-            <div class="card">
-                <h2 class="card-title">Bienvenue parmi nous!</h2>
+            <div class="form-content">
+                <div id="success-msg" class="success-message"></div>
+                <div class="note">
+                    📋 Les informations recueillies sont confidentielles et utilisées uniquement pour mieux vous servir.
+                </div>
                 <form id="visitor-form">
-                    <div class="form-group">
-                        <label class="form-label">Nom *</label>
-                        <input type="text" id="v-nom" class="form-input" required>
+                    <div class="form-section">
+                        <h3 class="section-title">Informations Personnelles</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="nom">Nom <span class="required">*</span></label>
+                                <input type="text" id="nom" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="prenom">Prénom <span class="required">*</span></label>
+                                <input type="text" id="prenom" required>
+                            </div>
+                        </div>
+                        <div class="form-row full">
+                            <div class="form-group">
+                                <label for="adresse">Adresse complète <span class="required">*</span></label>
+                                <input type="text" id="adresse" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="ville">Ville <span class="required">*</span></label>
+                                <input type="text" id="ville" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="code_postal">Code Postal <span class="required">*</span></label>
+                                <input type="text" id="code_postal" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="telephone">Téléphone <span class="required">*</span></label>
+                                <input type="tel" id="telephone" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="courriel">Courriel <span class="required">*</span></label>
+                                <input type="email" id="courriel" required>
+                            </div>
+                        </div>
+                        <div class="form-row full">
+                            <div class="form-group">
+                                <label>Sexe <span class="required">*</span></label>
+                                <div class="radio-group">
+                                    <div class="radio-option">
+                                        <input type="radio" id="homme" name="sexe" value="Homme" required>
+                                        <label for="homme">Homme</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="femme" name="sexe" value="Femme" required>
+                                        <label for="femme">Femme</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Prénom *</label>
-                        <input type="text" id="v-prenom" class="form-input" required>
+
+                    <div class="form-section">
+                        <h3 class="section-title">Informations Spirituelles</h3>
+                        <div class="form-group">
+                            <label>Avez-vous déjà accepté Jésus-Christ? <span class="required">*</span></label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="jesus_oui" name="jesus" value="Oui" required>
+                                    <label for="jesus_oui">Oui</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="jesus_non" name="jesus" value="Non" required>
+                                    <label for="jesus_non">Non</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="followup-section" id="jesus-followup">
+                            <label style="margin-bottom: 12px;">Aimeriez-vous accepter Jésus-Christ?</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-option">
+                                    <input type="checkbox" id="followup_oui" value="Oui, je suis prêt(e)">
+                                    <label for="followup_oui">Oui, je suis prêt(e)</label>
+                                </div>
+                                <div class="checkbox-option">
+                                    <input type="checkbox" id="followup_parler" value="J'aimerais en parler">
+                                    <label for="followup_parler">J'aimerais en parler avec quelqu'un</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 20px;">
+                            <label>Aimeriez-vous devenir membre?</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="membre_oui" name="membre" value="Oui">
+                                    <label for="membre_oui">Oui</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="membre_non" name="membre" value="Non">
+                                    <label for="membre_non">Non</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="membre_reflechir" name="membre" value="J'aimerais y réfléchir">
+                                    <label for="membre_reflechir">J'aimerais y réfléchir</label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Téléphone *</label>
-                        <input type="tel" id="v-tel" class="form-input" required>
+
+                    <div class="form-section">
+                        <h3 class="section-title">À Propos de Votre Visite</h3>
+                        <div class="form-group">
+                            <label for="connaissance">Comment avez-vous connu notre église?</label>
+                            <textarea id="connaissance"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="reference">Personne de référence</label>
+                            <input type="text" id="reference" placeholder="Nom et téléphone">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Courriel</label>
-                        <input type="email" id="v-email" class="form-input">
+
+                    <div class="form-section">
+                        <h3 class="section-title">Préférences de Contact</h3>
+                        <div class="form-group">
+                            <label>Meilleur moyen de vous contacter? <span class="required">*</span></label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="comm_tel" name="communication" value="Téléphone" required>
+                                    <label for="comm_tel">Téléphone</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="comm_email" name="communication" value="Courriel" required>
+                                    <label for="comm_email">Courriel</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="comm_both" name="communication" value="Les deux" required>
+                                    <label for="comm_both">Les deux</label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Ville</label>
-                        <input type="text" id="v-ville" class="form-input">
+
+                    <div class="form-section">
+                        <h3 class="section-title">Votre Opinion</h3>
+                        <div class="form-group">
+                            <label for="commentaires">Partagez votre expérience</label>
+                            <textarea id="commentaires" placeholder="Vos impressions, suggestions..."></textarea>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Avez-vous accepté Jésus? *</label>
-                        <select id="v-jesus" class="form-input" required>
-                            <option value="">-- Sélectionnez --</option>
-                            <option value="oui">Oui</option>
-                            <option value="non">Non</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Intéressé à devenir membre? *</label>
-                        <select id="v-membre" class="form-input" required>
-                            <option value="">-- Sélectionnez --</option>
-                            <option value="oui">Oui</option>
-                            <option value="non">Non</option>
-                            <option value="peut-etre">Peut-être</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Commentaires</label>
-                        <textarea id="v-comments" class="form-input" placeholder="Vos remarques ou questions..."></textarea>
-                    </div>
-                    <button type="submit" class="btn-primary">✅ S'enregistrer</button>
+
+                    <button type="submit" class="submit-btn">Soumettre</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- ADMIN DASHBOARD PAGE -->
+    <!-- ADMIN -->
     <div id="admin-page" class="page">
         <div class="admin-header">
             <div class="admin-header-content">
                 <div class="admin-branding">
                     <h1>Famille ÉMMÉ</h1>
-                    <div class="admin-subtitle">Tableau de bord administrateur</div>
+                    <div class="admin-subtitle">Tableau de bord</div>
                 </div>
                 <button class="logout-btn" onclick="logout()">Déconnexion</button>
             </div>
         </div>
 
         <div class="admin-container">
-            <!-- TABS -->
             <div class="admin-tabs">
-                <button class="admin-tab active" onclick="switchTab('messages')">
-                    📱 Messages
-                </button>
-                <button class="admin-tab" onclick="switchTab('visitors')">
-                    👥 Visiteurs
-                </button>
+                <button class="admin-tab active" onclick="switchTab('messages')">📱 Messages</button>
+                <button class="admin-tab" onclick="switchTab('visitors')">👥 Visiteurs</button>
             </div>
 
-            <!-- MESSAGES TAB -->
             <div id="messages-tab" class="tab-content active">
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-icon">📩</div>
-                        <div class="stat-label">Total Messages</div>
+                        <div class="stat-label">Total</div>
                         <div class="stat-value" id="stat-msg-total">0</div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">🙏</div>
-                        <div class="stat-label">Prières</div>
-                        <div class="stat-value" id="stat-msg-prayer">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">🚨</div>
-                        <div class="stat-label">Urgences</div>
-                        <div class="stat-value" id="stat-msg-urgent">0</div>
-                    </div>
                 </div>
-
                 <div class="data-section">
                     <div class="section-header">
-                        <h3 class="section-title">Messages reçus</h3>
+                        <h3 class="section-title-admin">Messages reçus</h3>
                     </div>
                     <div class="data-list" id="messages-list"></div>
                 </div>
             </div>
 
-            <!-- VISITORS TAB -->
             <div id="visitors-tab" class="tab-content">
                 <div class="stats-grid">
                     <div class="stat-card">
@@ -454,10 +584,9 @@
                         <div class="stat-value" id="stat-v-member">0</div>
                     </div>
                 </div>
-
                 <div class="data-section">
                     <div class="section-header">
-                        <h3 class="section-title">Visiteurs enregistrés</h3>
+                        <h3 class="section-title-admin">Visiteurs enregistrés</h3>
                     </div>
                     <div class="data-list" id="visitors-list"></div>
                 </div>
@@ -469,7 +598,6 @@
         // ROUTING
         window.addEventListener('load', function() {
             const params = new URLSearchParams(window.location.search);
-            
             if (params.has('admin')) {
                 showAdminLogin();
             } else if (params.has('visiteur')) {
@@ -507,7 +635,6 @@
         function switchTab(tab) {
             document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            
             event.target.classList.add('active');
             document.getElementById(tab + '-tab').classList.add('active');
         }
@@ -529,12 +656,8 @@
 
         document.getElementById('message-form').addEventListener('submit', function(e) {
             e.preventDefault();
-            
             const category = document.getElementById('msg-category').value;
-            if (!category) {
-                alert('Veuillez sélectionner une catégorie');
-                return;
-            }
+            if (!category) { alert('Veuillez sélectionner une catégorie'); return; }
 
             const data = {
                 id: Date.now(),
@@ -548,34 +671,59 @@
             messages.unshift(data);
             localStorage.setItem('emme_messages', JSON.stringify(messages));
 
-            showToast('Message envoyé avec succès!');
+            showToast('Message envoyé!');
             this.reset();
             document.querySelectorAll('.category-option').forEach(opt => opt.classList.remove('selected'));
         });
 
         // VISITOR FORM
+        document.querySelectorAll('input[name="jesus"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.getElementById('jesus-followup').style.display = 
+                    this.value === 'Non' ? 'block' : 'none';
+            });
+        });
+
         document.getElementById('visitor-form').addEventListener('submit', function(e) {
             e.preventDefault();
+            
+            const followup = [];
+            document.querySelectorAll('#jesus-followup input:checked').forEach(cb => {
+                followup.push(cb.value);
+            });
 
             const data = {
                 id: Date.now(),
-                nom: document.getElementById('v-nom').value,
-                prenom: document.getElementById('v-prenom').value,
-                telephone: document.getElementById('v-tel').value,
-                courriel: document.getElementById('v-email').value,
-                ville: document.getElementById('v-ville').value,
-                jesus: document.getElementById('v-jesus').value,
-                membre: document.getElementById('v-membre').value,
-                commentaires: document.getElementById('v-comments').value,
-                timestamp: new Date().toISOString()
+                nom: document.getElementById('nom').value,
+                prenom: document.getElementById('prenom').value,
+                adresse: document.getElementById('adresse').value,
+                ville: document.getElementById('ville').value,
+                code_postal: document.getElementById('code_postal').value,
+                telephone: document.getElementById('telephone').value,
+                courriel: document.getElementById('courriel').value,
+                sexe: document.querySelector('input[name="sexe"]:checked')?.value,
+                jesus: document.querySelector('input[name="jesus"]:checked')?.value,
+                followup: followup.join(', '),
+                membre: document.querySelector('input[name="membre"]:checked')?.value,
+                connaissance: document.getElementById('connaissance').value,
+                reference: document.getElementById('reference').value,
+                communication: document.querySelector('input[name="communication"]:checked')?.value,
+                commentaires: document.getElementById('commentaires').value,
+                timestamp: new Date().toISOString(),
+                date: new Date().toLocaleDateString('fr-CA')
             };
 
             let visitors = JSON.parse(localStorage.getItem('emme_visitors') || '[]');
             visitors.unshift(data);
             localStorage.setItem('emme_visitors', JSON.stringify(visitors));
 
-            showToast('Enregistrement réussi! Bienvenue!');
+            const successMsg = document.getElementById('success-msg');
+            successMsg.innerHTML = `<strong>✅ Merci ${data.prenom} ${data.nom}!</strong><br>Votre formulaire a été soumis avec succès!`;
+            successMsg.style.display = 'block';
             this.reset();
+            document.getElementById('jesus-followup').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(() => { successMsg.style.display = 'none'; }, 8000);
         });
 
         // ADMIN
@@ -590,10 +738,7 @@
 
         function loadMessages() {
             const messages = JSON.parse(localStorage.getItem('emme_messages') || '[]');
-            
             document.getElementById('stat-msg-total').textContent = messages.length;
-            document.getElementById('stat-msg-prayer').textContent = messages.filter(m => m.category === 'prayer').length;
-            document.getElementById('stat-msg-urgent').textContent = messages.filter(m => m.category === 'urgent').length;
 
             const list = document.getElementById('messages-list');
             if (messages.length === 0) {
@@ -601,19 +746,19 @@
                 return;
             }
 
-            const categoryIcons = { prayer: '🙏', question: '❓', testimony: '💡', urgent: '🚨' };
-            const categoryNames = { prayer: 'Prière', question: 'Question', testimony: 'Témoignage', urgent: 'Urgence' };
+            const categoryIcons = { prayer: '🙏', question: '❓', testimony: '💡', urgent: '🚨', autre: '💬' };
+            const categoryNames = { prayer: 'Prière', question: 'Question', testimony: 'Témoignage', urgent: 'Urgence', autre: 'Autre' };
 
             list.innerHTML = messages.map(msg => {
                 const date = new Date(msg.timestamp);
                 return `
                     <div class="data-item">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
-                            <span style="font-weight: 700; font-size: 16px;">${categoryIcons[msg.category] || '💬'} ${categoryNames[msg.category] || 'Autre'}</span>
+                            <span style="font-weight: 700;">${categoryIcons[msg.category] || '💬'} ${categoryNames[msg.category] || 'Autre'}</span>
                             <span style="color: #94a3b8; font-size: 14px;">${date.toLocaleString('fr-FR')}</span>
                         </div>
-                        <div style="font-weight: 600; margin-bottom: 8px; color: #475569;">De: ${msg.sender}</div>
-                        <div style="color: #64748b; line-height: 1.6;">${msg.message}</div>
+                        <div style="font-weight: 600; margin-bottom: 8px;">De: ${msg.sender}</div>
+                        <div style="color: #475569;">${msg.message}</div>
                     </div>
                 `;
             }).join('');
@@ -623,8 +768,8 @@
             const visitors = JSON.parse(localStorage.getItem('emme_visitors') || '[]');
             
             document.getElementById('stat-v-total').textContent = visitors.length;
-            document.getElementById('stat-v-jesus').textContent = visitors.filter(v => v.jesus === 'oui').length;
-            document.getElementById('stat-v-member').textContent = visitors.filter(v => v.membre === 'oui').length;
+            document.getElementById('stat-v-jesus').textContent = visitors.filter(v => v.jesus === 'Oui').length;
+            document.getElementById('stat-v-member').textContent = visitors.filter(v => v.membre === 'Oui').length;
 
             const list = document.getElementById('visitors-list');
             if (visitors.length === 0) {
@@ -640,16 +785,22 @@
                             <span style="font-weight: 700; font-size: 18px;">${v.prenom} ${v.nom}</span>
                             <span style="color: #94a3b8; font-size: 14px;">${date.toLocaleDateString('fr-FR')}</span>
                         </div>
-                        <div style="margin-bottom: 8px; color: #475569;">
-                            <strong>📞</strong> ${v.telephone}
-                            ${v.courriel ? ` | <strong>📧</strong> ${v.courriel}` : ''}
-                        </div>
-                        ${v.ville ? `<div style="margin-bottom: 8px; color: #475569;"><strong>📍</strong> ${v.ville}</div>` : ''}
                         <div style="margin-bottom: 8px;">
-                            <strong>Jésus:</strong> <span style="color: ${v.jesus === 'oui' ? '#10b981' : '#ef4444'}; font-weight: 600;">${v.jesus === 'oui' ? '✓ Oui' : '✗ Non'}</span> | 
-                            <strong>Membre:</strong> <span style="font-weight: 600;">${v.membre}</span>
+                            <strong>📞</strong> ${v.telephone} | <strong>📧</strong> ${v.courriel}
                         </div>
-                        ${v.commentaires ? `<div style="color: #64748b; font-style: italic; margin-top: 8px; padding: 12px; background: #f8fafc; border-radius: 8px;">"${v.commentaires}"</div>` : ''}
+                        <div style="margin-bottom: 8px;">
+                            <strong>📍</strong> ${v.adresse}, ${v.ville} ${v.code_postal}
+                        </div>
+                        <div style="margin-bottom: 8px;">
+                            <strong>Jésus:</strong> <span class="badge ${v.jesus === 'Oui' ? 'badge-success' : 'badge-warning'}">${v.jesus}</span>
+                            ${v.followup ? ` | <strong>Suivi:</strong> ${v.followup}` : ''}
+                        </div>
+                        <div style="margin-bottom: 8px;">
+                            <strong>Membre:</strong> ${v.membre || 'N/A'} | 
+                            <strong>Contact:</strong> ${v.communication}
+                        </div>
+                        ${v.connaissance ? `<div style="color: #64748b; margin-top: 8px;"><strong>Comment connu:</strong> ${v.connaissance}</div>` : ''}
+                        ${v.commentaires ? `<div style="color: #64748b; font-style: italic; margin-top: 8px;">${v.commentaires}</div>` : ''}
                     </div>
                 `;
             }).join('');
