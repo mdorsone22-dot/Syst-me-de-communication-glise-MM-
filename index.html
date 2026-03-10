@@ -7,17 +7,12 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
             --primary: #667eea;
             --primary-dark: #764ba2;
             --success: #10b981;
-            --danger: #ef4444;
         }
 
         body {
@@ -25,7 +20,6 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             color: #1a202c;
-            position: relative;
         }
 
         body::before {
@@ -47,27 +41,12 @@
             100% { transform: translate(50px, 50px); }
         }
 
-        .page {
-            display: none;
-            position: relative;
-            z-index: 1;
-        }
+        .page { display: none; position: relative; z-index: 1; }
+        .page.active { display: block; }
 
-        .page.active {
-            display: block;
-        }
+        .container { max-width: 640px; margin: 0 auto; padding: 80px 24px 60px; }
 
-        .container {
-            max-width: 640px;
-            margin: 0 auto;
-            padding: 80px 24px 60px;
-        }
-
-        .brand-logo {
-            text-align: center;
-            margin-bottom: 48px;
-        }
-
+        .brand-logo { text-align: center; margin-bottom: 48px; }
         .brand-logo h1 {
             font-size: 48px;
             font-weight: 800;
@@ -77,12 +56,7 @@
             background-clip: text;
             margin-bottom: 12px;
         }
-
-        .brand-tagline {
-            font-size: 18px;
-            color: rgba(255,255,255,0.95);
-            font-weight: 500;
-        }
+        .brand-tagline { font-size: 18px; color: rgba(255,255,255,0.95); font-weight: 500; }
 
         .card {
             background: rgba(255, 255, 255, 0.95);
@@ -93,25 +67,10 @@
             border: 1px solid rgba(255,255,255,0.3);
         }
 
-        .card-title {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 32px;
-            text-align: center;
-        }
+        .card-title { font-size: 24px; font-weight: 700; margin-bottom: 32px; text-align: center; }
 
-        .form-group {
-            margin-bottom: 24px;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            color: #2d3748;
-            margin-bottom: 10px;
-        }
-
+        .form-group { margin-bottom: 24px; }
+        .form-label { display: block; font-size: 14px; font-weight: 600; color: #2d3748; margin-bottom: 10px; }
         .form-input {
             width: 100%;
             padding: 16px 20px;
@@ -121,21 +80,13 @@
             font-family: 'Inter', sans-serif;
             transition: all 0.3s;
         }
-
         .form-input:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
         }
-
-        textarea.form-input {
-            min-height: 120px;
-            resize: vertical;
-        }
-
-        select.form-input {
-            cursor: pointer;
-        }
+        textarea.form-input { min-height: 120px; resize: vertical; }
+        select.form-input { cursor: pointer; }
 
         .category-selector {
             display: grid;
@@ -143,7 +94,6 @@
             gap: 16px;
             margin-bottom: 32px;
         }
-
         .category-option {
             padding: 24px 20px;
             border: 2px solid #e2e8f0;
@@ -153,33 +103,21 @@
             text-align: center;
             background: white;
         }
-
         .category-option:hover {
             border-color: var(--primary);
             transform: translateY(-4px);
             box-shadow: 0 12px 32px rgba(102, 126, 234, 0.25);
         }
-
         .category-option.selected {
             border-color: transparent;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
-
         .category-option.selected .category-icon,
         .category-option.selected .category-name {
             filter: brightness(0) invert(1);
         }
-
-        .category-icon {
-            font-size: 36px;
-            margin-bottom: 12px;
-        }
-
-        .category-name {
-            font-size: 14px;
-            font-weight: 600;
-            color: #2d3748;
-        }
+        .category-icon { font-size: 36px; margin-bottom: 12px; }
+        .category-name { font-size: 14px; font-weight: 600; color: #2d3748; }
 
         .btn-primary {
             width: 100%;
@@ -194,17 +132,11 @@
             transition: all 0.3s;
             text-transform: uppercase;
         }
-
         .btn-primary:hover {
             transform: translateY(-4px);
             box-shadow: 0 16px 40px rgba(102, 126, 234, 0.5);
         }
-
-        .btn-primary:disabled {
-            background: #cbd5e0;
-            cursor: not-allowed;
-            transform: none;
-        }
+        .btn-primary:disabled { background: #cbd5e0; cursor: not-allowed; transform: none; }
 
         /* ADMIN */
         .admin-header {
@@ -216,7 +148,6 @@
             top: 0;
             z-index: 100;
         }
-
         .admin-header-content {
             max-width: 1400px;
             margin: 0 auto;
@@ -225,7 +156,6 @@
             justify-content: space-between;
             align-items: center;
         }
-
         .admin-branding h1 {
             font-size: 28px;
             font-weight: 800;
@@ -234,12 +164,7 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-
-        .admin-subtitle {
-            font-size: 14px;
-            color: #64748b;
-        }
-
+        .admin-subtitle { font-size: 14px; color: #64748b; }
         .logout-btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -251,47 +176,38 @@
             font-weight: 600;
         }
 
-        .admin-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 40px;
-        }
+        .admin-container { max-width: 1400px; margin: 0 auto; padding: 40px; }
 
         .admin-tabs {
             display: flex;
-            gap: 12px;
+            gap: 8px;
             margin-bottom: 32px;
-            border-bottom: 2px solid #e2e8f0;
+            background: white;
+            padding: 8px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
         }
-
         .admin-tab {
+            flex: 1;
             padding: 16px 32px;
             background: transparent;
             border: none;
-            border-bottom: 3px solid transparent;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
             font-weight: 600;
             color: #64748b;
             transition: all 0.3s;
         }
-
-        .admin-tab:hover {
-            color: var(--primary);
-        }
-
+        .admin-tab:hover { background: #f8fafc; }
         .admin-tab.active {
-            color: var(--primary);
-            border-bottom-color: var(--primary);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
 
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
 
         .stats-grid {
             display: grid;
@@ -299,19 +215,13 @@
             gap: 24px;
             margin-bottom: 40px;
         }
-
         .stat-card {
             background: white;
             padding: 32px;
             border-radius: 20px;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
         }
-
-        .stat-icon {
-            font-size: 40px;
-            margin-bottom: 16px;
-        }
-
+        .stat-icon { font-size: 40px; margin-bottom: 16px; }
         .stat-label {
             font-size: 13px;
             color: #64748b;
@@ -319,7 +229,6 @@
             font-weight: 700;
             margin-bottom: 12px;
         }
-
         .stat-value {
             font-size: 40px;
             font-weight: 800;
@@ -335,31 +244,16 @@
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
             overflow: hidden;
         }
-
         .section-header {
             padding: 24px 32px;
             border-bottom: 1px solid #f1f5f9;
             background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
         }
+        .section-title { font-size: 20px; font-weight: 700; }
 
-        .section-title {
-            font-size: 20px;
-            font-weight: 700;
-        }
-
-        .data-list {
-            max-height: 600px;
-            overflow-y: auto;
-        }
-
-        .data-item {
-            padding: 24px 32px;
-            border-bottom: 1px solid #f1f5f9;
-        }
-
-        .data-item:hover {
-            background: #f8fafc;
-        }
+        .data-list { max-height: 600px; overflow-y: auto; }
+        .data-item { padding: 24px 32px; border-bottom: 1px solid #f1f5f9; }
+        .data-item:hover { background: #f8fafc; }
 
         .toast {
             position: fixed;
@@ -372,10 +266,7 @@
             display: none;
             z-index: 10001;
         }
-
-        .toast.show {
-            display: block;
-        }
+        .toast.show { display: block; }
 
         @media (max-width: 768px) {
             .container { padding: 60px 20px; }
@@ -383,18 +274,19 @@
             .category-selector { grid-template-columns: 1fr; }
             .admin-container { padding: 24px; }
             .stats-grid { grid-template-columns: 1fr; }
+            .admin-tabs { flex-direction: column; }
         }
     </style>
 </head>
 <body>
     <div class="toast" id="toast">✅ <span id="toast-message"></span></div>
 
-    <!-- MESSAGE FORM -->
+    <!-- MESSAGE FORM PAGE -->
     <div id="message-page" class="page">
         <div class="container">
             <div class="brand-logo">
-                <h1>✨ ÉMMÉ CONNECT</h1>
-                <p class="brand-tagline">Envoyez un message</p>
+                <h1>✨ Famille ÉMMÉ</h1>
+                <p class="brand-tagline">Envoyez-nous un message</p>
             </div>
             <div class="card">
                 <h2 class="card-title">Contactez-nous</h2>
@@ -418,10 +310,6 @@
                                 <span class="category-icon">🚨</span>
                                 <div class="category-name">Urgence</div>
                             </div>
-                            <div class="category-option" data-category="other">
-                                <span class="category-icon">💬</span>
-                                <div class="category-name">Autre</div>
-                            </div>
                         </div>
                         <input type="hidden" id="msg-category" required>
                     </div>
@@ -431,36 +319,15 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">Votre message</label>
-                        <textarea id="msg-text" class="form-input" required></textarea>
+                        <textarea id="msg-text" class="form-input" required placeholder="Écrivez votre message ici..."></textarea>
                     </div>
-                    <button type="submit" class="btn-primary" id="msg-btn">📤 Envoyer</button>
+                    <button type="submit" class="btn-primary">📤 Envoyer</button>
                 </form>
-                <div style="text-align: center; margin-top: 24px;">
-                    <a href="?mes-messages" style="color: white; text-decoration: none; font-weight: 600;">
-                        💬 Voir mes messages et réponses
-                    </a>
-                </div>
             </div>
         </div>
     </div>
 
-    <!-- MES MESSAGES PAGE -->
-    <div id="mes-messages-page" class="page">
-        <div class="container">
-            <div class="brand-logo">
-                <h1>💬 Mes Messages</h1>
-                <p class="brand-tagline">Vos conversations</p>
-            </div>
-            <div id="my-messages-container"></div>
-            <div style="text-align: center; margin-top: 32px;">
-                <a href="?messages" style="color: white; text-decoration: none; font-weight: 600;">
-                    ← Envoyer un nouveau message
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- VISITOR FORM -->
+    <!-- VISITOR FORM PAGE -->
     <div id="visitor-page" class="page">
         <div class="container">
             <div class="brand-logo">
@@ -468,22 +335,22 @@
                 <p class="brand-tagline">Registre des visiteurs</p>
             </div>
             <div class="card">
-                <h2 class="card-title">Bienvenue!</h2>
+                <h2 class="card-title">Bienvenue parmi nous!</h2>
                 <form id="visitor-form">
                     <div class="form-group">
-                        <label class="form-label">Nom</label>
+                        <label class="form-label">Nom *</label>
                         <input type="text" id="v-nom" class="form-input" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Prénom</label>
+                        <label class="form-label">Prénom *</label>
                         <input type="text" id="v-prenom" class="form-input" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Téléphone</label>
+                        <label class="form-label">Téléphone *</label>
                         <input type="tel" id="v-tel" class="form-input" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Courriel (optionnel)</label>
+                        <label class="form-label">Courriel</label>
                         <input type="email" id="v-email" class="form-input">
                     </div>
                     <div class="form-group">
@@ -491,33 +358,33 @@
                         <input type="text" id="v-ville" class="form-input">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Avez-vous accepté Jésus?</label>
+                        <label class="form-label">Avez-vous accepté Jésus? *</label>
                         <select id="v-jesus" class="form-input" required>
-                            <option value="">Sélectionnez</option>
+                            <option value="">-- Sélectionnez --</option>
                             <option value="oui">Oui</option>
                             <option value="non">Non</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Intéressé à devenir membre?</label>
+                        <label class="form-label">Intéressé à devenir membre? *</label>
                         <select id="v-membre" class="form-input" required>
-                            <option value="">Sélectionnez</option>
+                            <option value="">-- Sélectionnez --</option>
                             <option value="oui">Oui</option>
                             <option value="non">Non</option>
                             <option value="peut-etre">Peut-être</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Commentaires (optionnel)</label>
-                        <textarea id="v-comments" class="form-input"></textarea>
+                        <label class="form-label">Commentaires</label>
+                        <textarea id="v-comments" class="form-input" placeholder="Vos remarques ou questions..."></textarea>
                     </div>
-                    <button type="submit" class="btn-primary" id="v-btn">✅ S'enregistrer</button>
+                    <button type="submit" class="btn-primary">✅ S'enregistrer</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- ADMIN DASHBOARD -->
+    <!-- ADMIN DASHBOARD PAGE -->
     <div id="admin-page" class="page">
         <div class="admin-header">
             <div class="admin-header-content">
@@ -530,9 +397,14 @@
         </div>
 
         <div class="admin-container">
+            <!-- TABS -->
             <div class="admin-tabs">
-                <button class="admin-tab active" onclick="switchTab('messages')">📱 Messages</button>
-                <button class="admin-tab" onclick="switchTab('visitors')">👥 Visiteurs</button>
+                <button class="admin-tab active" onclick="switchTab('messages')">
+                    📱 Messages
+                </button>
+                <button class="admin-tab" onclick="switchTab('visitors')">
+                    👥 Visiteurs
+                </button>
             </div>
 
             <!-- MESSAGES TAB -->
@@ -559,11 +431,7 @@
                     <div class="section-header">
                         <h3 class="section-title">Messages reçus</h3>
                     </div>
-                    <div class="data-list" id="messages-list">
-                        <div style="text-align: center; padding: 60px; color: #94a3b8;">
-                            📭 Aucun message
-                        </div>
-                    </div>
+                    <div class="data-list" id="messages-list"></div>
                 </div>
             </div>
 
@@ -591,11 +459,7 @@
                     <div class="section-header">
                         <h3 class="section-title">Visiteurs enregistrés</h3>
                     </div>
-                    <div class="data-list" id="visitors-list">
-                        <div style="text-align: center; padding: 60px; color: #94a3b8;">
-                            👥 Aucun visiteur
-                        </div>
-                    </div>
+                    <div class="data-list" id="visitors-list"></div>
                 </div>
             </div>
         </div>
@@ -610,10 +474,6 @@
                 showAdminLogin();
             } else if (params.has('visiteur')) {
                 showPage('visitor-page');
-            } else if (params.has('mes-messages')) {
-                showPage('mes-messages-page');
-                displayMyMessages();
-                startMyMessagesRefresh();
             } else if (params.has('messages')) {
                 showPage('message-page');
             } else {
@@ -631,6 +491,7 @@
             if (password === 'admin123') {
                 showPage('admin-page');
                 loadAdminData();
+                window.history.pushState({}, '', '?admin');
             } else if (password !== null) {
                 alert('❌ Mot de passe incorrect!');
                 window.location.href = window.location.pathname;
@@ -640,7 +501,7 @@
         }
 
         function logout() {
-            window.location.href = window.location.pathname;
+            window.location.href = window.location.pathname + '?messages';
         }
 
         function switchTab(tab) {
@@ -654,9 +515,7 @@
         function showToast(msg) {
             document.getElementById('toast-message').textContent = msg;
             document.getElementById('toast').classList.add('show');
-            setTimeout(() => {
-                document.getElementById('toast').classList.remove('show');
-            }, 3000);
+            setTimeout(() => document.getElementById('toast').classList.remove('show'), 3000);
         }
 
         // MESSAGE FORM
@@ -671,29 +530,25 @@
         document.getElementById('message-form').addEventListener('submit', function(e) {
             e.preventDefault();
             
+            const category = document.getElementById('msg-category').value;
+            if (!category) {
+                alert('Veuillez sélectionner une catégorie');
+                return;
+            }
+
             const data = {
                 id: Date.now(),
-                category: document.getElementById('msg-category').value,
+                category: category,
                 sender: document.getElementById('msg-name').value || 'Anonyme',
                 message: document.getElementById('msg-text').value,
                 timestamp: new Date().toISOString()
             };
 
-            if (!data.category) {
-                alert('Veuillez sélectionner une catégorie');
-                return;
-            }
-
             let messages = JSON.parse(localStorage.getItem('emme_messages') || '[]');
             messages.unshift(data);
             localStorage.setItem('emme_messages', JSON.stringify(messages));
 
-            // Save message ID for user to check later
-            let myMessages = JSON.parse(localStorage.getItem('my_messages') || '[]');
-            myMessages.push(data.id);
-            localStorage.setItem('my_messages', JSON.stringify(myMessages));
-
-            showToast('Message envoyé!');
+            showToast('Message envoyé avec succès!');
             this.reset();
             document.querySelectorAll('.category-option').forEach(opt => opt.classList.remove('selected'));
         });
@@ -719,7 +574,7 @@
             visitors.unshift(data);
             localStorage.setItem('emme_visitors', JSON.stringify(visitors));
 
-            showToast('Enregistrement réussi!');
+            showToast('Enregistrement réussi! Bienvenue!');
             this.reset();
         });
 
@@ -746,58 +601,22 @@
                 return;
             }
 
+            const categoryIcons = { prayer: '🙏', question: '❓', testimony: '💡', urgent: '🚨' };
+            const categoryNames = { prayer: 'Prière', question: 'Question', testimony: 'Témoignage', urgent: 'Urgence' };
+
             list.innerHTML = messages.map(msg => {
                 const date = new Date(msg.timestamp);
-                const categoryIcons = { prayer: '🙏', question: '❓', testimony: '💡', urgent: '🚨', other: '💬' };
-                const categoryNames = { prayer: 'Prière', question: 'Question', testimony: 'Témoignage', urgent: 'Urgence', other: 'Autre' };
-                
                 return `
                     <div class="data-item">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
-                            <span style="font-weight: 700;">${categoryIcons[msg.category] || '💬'} ${categoryNames[msg.category] || 'Autre'}</span>
+                            <span style="font-weight: 700; font-size: 16px;">${categoryIcons[msg.category] || '💬'} ${categoryNames[msg.category] || 'Autre'}</span>
                             <span style="color: #94a3b8; font-size: 14px;">${date.toLocaleString('fr-FR')}</span>
                         </div>
-                        <div style="font-weight: 600; margin-bottom: 8px;">De: ${msg.sender}</div>
-                        <div style="color: #475569; margin-bottom: 12px;">${msg.message}</div>
-                        ${msg.replies && msg.replies.length > 0 ? `
-                        <div style="border-left: 4px solid #10b981; padding-left: 16px; margin: 12px 0;">
-                            ${msg.replies.map(r => {
-                                const rd = new Date(r.timestamp);
-                                return `<div style="background: #f0f9ff; padding: 12px; border-radius: 8px; margin-bottom: 8px;">
-                                    <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">Admin - ${rd.toLocaleTimeString('fr-FR')}</div>
-                                    <div>${r.text}</div>
-                                </div>`;
-                            }).join('')}
-                        </div>
-                        ` : ''}
-                        <button onclick="replyToMessage(${msg.id}, '${msg.sender.replace(/'/g, "\\'")}', '${msg.message.replace(/'/g, "\\'").replace(/\n/g, ' ')}')" 
-                                style="padding: 8px 16px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
-                            💬 Répondre
-                        </button>
+                        <div style="font-weight: 600; margin-bottom: 8px; color: #475569;">De: ${msg.sender}</div>
+                        <div style="color: #64748b; line-height: 1.6;">${msg.message}</div>
                     </div>
                 `;
             }).join('');
-        }
-
-        function replyToMessage(msgId, sender, message) {
-            const replyText = prompt(`Répondre à ${sender}:\n\n"${message.substring(0, 100)}..."\n\nVotre réponse:`);
-            
-            if (!replyText || !replyText.trim()) return;
-
-            let messages = JSON.parse(localStorage.getItem('emme_messages') || '[]');
-            const index = messages.findIndex(m => m.id === msgId);
-            
-            if (index !== -1) {
-                if (!messages[index].replies) messages[index].replies = [];
-                messages[index].replies.push({
-                    text: replyText.trim(),
-                    timestamp: new Date().toISOString(),
-                    admin: true
-                });
-                localStorage.setItem('emme_messages', JSON.stringify(messages));
-                showToast('Réponse envoyée!');
-                loadMessages();
-            }
         }
 
         function loadVisitors() {
@@ -821,85 +640,16 @@
                             <span style="font-weight: 700; font-size: 18px;">${v.prenom} ${v.nom}</span>
                             <span style="color: #94a3b8; font-size: 14px;">${date.toLocaleDateString('fr-FR')}</span>
                         </div>
-                        <div style="margin-bottom: 8px;">
+                        <div style="margin-bottom: 8px; color: #475569;">
                             <strong>📞</strong> ${v.telephone}
                             ${v.courriel ? ` | <strong>📧</strong> ${v.courriel}` : ''}
                         </div>
-                        ${v.ville ? `<div style="margin-bottom: 8px;"><strong>📍</strong> ${v.ville}</div>` : ''}
+                        ${v.ville ? `<div style="margin-bottom: 8px; color: #475569;"><strong>📍</strong> ${v.ville}</div>` : ''}
                         <div style="margin-bottom: 8px;">
                             <strong>Jésus:</strong> <span style="color: ${v.jesus === 'oui' ? '#10b981' : '#ef4444'}; font-weight: 600;">${v.jesus === 'oui' ? '✓ Oui' : '✗ Non'}</span> | 
-                            <strong>Membre:</strong> ${v.membre}
+                            <strong>Membre:</strong> <span style="font-weight: 600;">${v.membre}</span>
                         </div>
-                        ${v.commentaires ? `<div style="color: #64748b; font-style: italic; margin-top: 8px;">${v.commentaires}</div>` : ''}
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // USER MESSAGES PAGE
-        let myMessagesInterval;
-
-        function startMyMessagesRefresh() {
-            displayMyMessages();
-            myMessagesInterval = setInterval(displayMyMessages, 3000);
-        }
-
-        function displayMyMessages() {
-            const myMessageIds = JSON.parse(localStorage.getItem('my_messages') || '[]');
-            const allMessages = JSON.parse(localStorage.getItem('emme_messages') || '[]');
-            const myConversations = allMessages.filter(m => myMessageIds.includes(m.id));
-
-            const container = document.getElementById('my-messages-container');
-
-            if (myConversations.length === 0) {
-                container.innerHTML = `
-                    <div class="card">
-                        <div style="text-align: center; padding: 40px; color: #94a3b8;">
-                            📭 Vous n'avez pas encore envoyé de messages
-                        </div>
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = myConversations.map(msg => {
-                const date = new Date(msg.timestamp);
-                const categoryIcons = { prayer: '🙏', question: '❓', testimony: '💡', urgent: '🚨', other: '💬' };
-                const categoryNames = { prayer: 'Prière', question: 'Question', testimony: 'Témoignage', urgent: 'Urgence', other: 'Autre' };
-
-                return `
-                    <div class="card" style="margin-bottom: 24px;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
-                            <span style="font-weight: 700;">${categoryIcons[msg.category]} ${categoryNames[msg.category]}</span>
-                            <span style="color: #94a3b8; font-size: 14px;">${date.toLocaleDateString('fr-FR')}</span>
-                        </div>
-                        <div style="margin-bottom: 16px;">
-                            <strong>Votre message:</strong><br>
-                            <div style="color: #475569; margin-top: 8px;">${msg.message}</div>
-                        </div>
-                        ${msg.replies && msg.replies.length > 0 ? `
-                        <div style="border-top: 2px solid #e2e8f0; padding-top: 16px; margin-top: 16px;">
-                            <div style="font-weight: 700; color: var(--primary); margin-bottom: 12px;">
-                                💬 Réponses (${msg.replies.length})
-                            </div>
-                            ${msg.replies.map(reply => {
-                                const replyDate = new Date(reply.timestamp);
-                                return `
-                                    <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); padding: 16px; border-radius: 12px; margin-bottom: 12px;">
-                                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                            <span style="font-weight: 700; color: var(--primary);">👤 Admin</span>
-                                            <span style="color: #64748b; font-size: 12px;">${replyDate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</span>
-                                        </div>
-                                        <div style="color: #1e293b;">${reply.text}</div>
-                                    </div>
-                                `;
-                            }).join('')}
-                        </div>
-                        ` : `
-                        <div style="color: #94a3b8; font-style: italic; border-top: 2px solid #e2e8f0; padding-top: 16px; margin-top: 16px;">
-                            ⏳ En attente de réponse...
-                        </div>
-                        `}
+                        ${v.commentaires ? `<div style="color: #64748b; font-style: italic; margin-top: 8px; padding: 12px; background: #f8fafc; border-radius: 8px;">"${v.commentaires}"</div>` : ''}
                     </div>
                 `;
             }).join('');
