@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ÉMMÉ CONNECT - Test Admin</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+        .page {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            background: white;
+            color: #333;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .page.active {
+            display: block;
+        }
+        h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- SEND PAGE -->
+    <div id="send-page" class="page">
+        <h1>✨ ÉMMÉ CONNECT</h1>
+        <p>Page d'envoi de messages</p>
+        <button onclick="window.location.href='?admin-messages'">Aller à Admin</button>
+        <button onclick="window.location.href='?mes-messages'">Mes Messages</button>
+    </div>
+
+    <!-- CHECK MESSAGES PAGE -->
+    <div id="check-page" class="page">
+        <h1>💬 Mes Messages</h1>
+        <p>Vos conversations</p>
+        <button onclick="window.location.href='?'">Retour</button>
+    </div>
+
+    <!-- ADMIN PAGE -->
+    <div id="admin-page" class="page">
+        <h1>👨‍💼 ADMIN DASHBOARD</h1>
+        <p>Tableau de bord administrateur</p>
+        <p style="color: green; font-size: 24px; font-weight: bold;">✅ ADMIN ROUTE FONCTIONNE!</p>
+        <button onclick="logout()">Déconnexion</button>
+    </div>
+
+    <script>
+        console.log('Script started');
+        
+        // Route handling
+        window.addEventListener('load', function() {
+            console.log('Page loaded');
+            const params = new URLSearchParams(window.location.search);
+            console.log('URL params:', window.location.search);
+            
+            if (params.has('admin-messages')) {
+                console.log('Admin route detected');
+                showAdminLogin();
+            } else if (params.has('mes-messages')) {
+                console.log('Messages route detected');
+                showMyMessages();
+            } else {
+                console.log('Default route - send page');
+                document.getElementById('send-page').classList.add('active');
+            }
+        });
+
+        function showAdminLogin() {
+            console.log('showAdminLogin called');
+            const password = prompt('🔐 Mot de passe administrateur:');
+            console.log('Password entered:', password ? 'YES' : 'NO');
+            
+            if (password === 'admin123') {
+                console.log('Correct password!');
+                switchToAdmin();
+            } else if (password !== null) {
+                alert('❌ Mot de passe incorrect!');
+                window.location.href = window.location.pathname;
+            } else {
+                window.location.href = window.location.pathname;
+            }
+        }
+
+        function switchToAdmin() {
+            console.log('switchToAdmin called');
+            document.querySelectorAll('.page').forEach(p => {
+                p.classList.remove('active');
+                console.log('Removed active from:', p.id);
+            });
+            document.getElementById('admin-page').classList.add('active');
+            console.log('Admin page activated');
+        }
+
+        function showMyMessages() {
+            console.log('showMyMessages called');
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('check-page').classList.add('active');
+        }
+
+        function logout() {
+            window.location.href = window.location.pathname;
+        }
+    </script>
+</body>
+</html>
