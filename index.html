@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Famille ÉMMÉ</title>
+    
+    <!-- Firebase SDK v9 (compat mode for easier syntax) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         
@@ -33,10 +39,34 @@
             100% { transform: translate(50px, 50px); }
         }
 
+        .loading-screen {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            color: white;
+        }
+        .loading-screen.hidden { display: none; }
+        .spinner {
+            width: 60px; height: 60px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         .page { display: none; position: relative; z-index: 1; }
         .page.active { display: block; }
 
-        /* MESSAGE FORM */
         .container { max-width: 640px; margin: 0 auto; padding: 80px 24px 60px; }
         .brand-logo { text-align: center; margin-bottom: 48px; }
         .brand-logo h1 {
@@ -104,9 +134,12 @@
             cursor: pointer; transition: all 0.3s;
             text-transform: uppercase;
         }
-        .btn-primary:hover {
+        .btn-primary:hover:not(:disabled) {
             transform: translateY(-4px);
             box-shadow: 0 16px 40px rgba(102, 126, 234, 0.5);
+        }
+        .btn-primary:disabled {
+            opacity: 0.5; cursor: not-allowed;
         }
 
         /* VISITOR FORM */
@@ -138,7 +171,7 @@
 
         .required { color: #e74c3c; margin-left: 3px; }
 
-        input[type="text"], input[type="email"], input[type="tel"], textarea {
+        input[type="text"], input[type="email"], input[type="tel"], input[type="password"], textarea {
             width: 100%; padding: 12px 14px;
             border: 1px solid #ced4da; border-radius: 5px;
             font-size: 15px; transition: all 0.3s;
@@ -177,9 +210,12 @@
             cursor: pointer; width: 100%; transition: transform 0.2s;
             text-transform: uppercase; letter-spacing: 0.5px;
         }
-        .submit-btn:hover {
+        .submit-btn:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+        }
+        .submit-btn:disabled {
+            opacity: 0.5; cursor: not-allowed; transform: none;
         }
 
         .success-message {
@@ -447,7 +483,12 @@
             box-shadow: 0 30px 90px rgba(0, 0, 0, 0.25);
             display: none; z-index: 10001;
         }
-        .toast.show { display: block; }
+        .toast.show { display: block; animation: slideIn 0.3s; }
+        
+        @keyframes slideIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
 
         .no-data {
             text-align: center; padding: 60px 20px;
@@ -471,6 +512,11 @@
     </style>
 </head>
 <body>
+    <div class="loading-screen" id="loading-screen">
+        <div class="spinner"></div>
+        <div>Chargement...</div>
+    </div>
+
     <div class="toast" id="toast">✅ <span id="toast-message"></span></div>
 
     <!-- MESSAGE PAGE -->
@@ -517,7 +563,7 @@
                         <label class="form-label">Votre message</label>
                         <textarea id="msg-text" class="form-input" required></textarea>
                     </div>
-                    <button type="submit" class="btn-primary">📤 Envoyer</button>
+                    <button type="submit" class="btn-primary" id="msg-submit-btn">📤 Envoyer</button>
                 </form>
             </div>
         </div>
@@ -689,7 +735,7 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="submit-btn">Soumettre le Formulaire</button>
+                    <button type="submit" class="submit-btn" id="visitor-submit-btn">Soumettre le Formulaire</button>
                 </form>
             </div>
         </div>
@@ -832,51 +878,93 @@
     </div>
 
     <script>
+        // ==========================================
+        // FIREBASE CONFIGURATION
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyDBvUDsvuHSSv5SUF36ziJjW_TEi4H8HWM",
+            authDomain: "famille-emme-system.firebaseapp.com",
+            databaseURL: "https://famille-emme-system-default-rtdb.firebaseio.com",
+            projectId: "famille-emme-system",
+            storageBucket: "famille-emme-system.firebasestorage.app",
+            messagingSenderId: "578525304722",
+            appId: "1:578525304722:web:396bf8aff4f99402f4934b",
+            measurementId: "G-0EBD9J84CP"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // ==========================================
+        // VARIABLES GLOBALES
+        // ==========================================
         let allVisitors = [];
         let filteredVisitors = [];
         let allMessages = [];
         let currentMessageFilter = 'all';
         let previousCounts = { messages: 0, visitors: 0 };
+        let currentUser = null;
 
-        // AUDIO NOTIFICATION
+        // Hide loading screen when page loads
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loading-screen').classList.add('hidden');
+            }, 500);
+        });
+
+        // ==========================================
+        // NOTIFICATION SOUND
+        // ==========================================
         function playNotificationSound() {
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            
-            oscillator.frequency.value = 800;
-            oscillator.type = 'sine';
-            
-            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-            
-            oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + 0.3);
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 800;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.3);
+            } catch(e) {
+                console.log('Audio not supported');
+            }
         }
 
+        // ==========================================
         // CHECK FOR NEW DATA
+        // ==========================================
         function checkForNewData() {
-            const messages = JSON.parse(localStorage.getItem('emme_messages') || '[]');
-            const visitors = JSON.parse(localStorage.getItem('emme_visitors') || '[]');
+            if (!currentUser) return;
             
-            const newMessages = messages.length - previousCounts.messages;
-            const newVisitors = visitors.length - previousCounts.visitors;
-            const totalNew = newMessages + newVisitors;
-            
-            if (totalNew > 0) {
-                playNotificationSound();
-                const badge = document.getElementById('notification-badge');
-                badge.textContent = totalNew;
-                badge.style.display = 'flex';
+            db.collection('messages').get().then(snapshot => {
+                const newMessages = snapshot.size - previousCounts.messages;
                 
-                showToast(`${totalNew} nouvelle${totalNew > 1 ? 's' : ''} notification${totalNew > 1 ? 's' : ''}!`);
-            }
-            
-            previousCounts.messages = messages.length;
-            previousCounts.visitors = visitors.length;
+                db.collection('visitors').get().then(snapshot2 => {
+                    const newVisitors = snapshot2.size - previousCounts.visitors;
+                    const totalNew = newMessages + newVisitors;
+                    
+                    if (totalNew > 0) {
+                        playNotificationSound();
+                        const badge = document.getElementById('notification-badge');
+                        badge.textContent = totalNew;
+                        badge.style.display = 'flex';
+                        
+                        showToast(`${totalNew} nouvelle${totalNew > 1 ? 's' : ''} notification${totalNew > 1 ? 's' : ''}!`);
+                    }
+                    
+                    previousCounts.messages = snapshot.size;
+                    previousCounts.visitors = snapshot2.size;
+                });
+            });
         }
 
         document.getElementById('notification-btn').addEventListener('click', function() {
@@ -884,7 +972,9 @@
             badge.style.display = 'none';
         });
 
+        // ==========================================
         // ROUTING
+        // ==========================================
         window.addEventListener('load', function() {
             const params = new URLSearchParams(window.location.search);
             if (params.has('admin')) {
@@ -904,21 +994,40 @@
         }
 
         function showAdminLogin() {
-            const password = prompt('🔐 Mot de passe administrateur:');
-            if (password === 'admin123') {
-                showPage('admin-page');
-                loadAdminData();
-                window.history.pushState({}, '', '?admin');
-            } else if (password !== null) {
-                alert('❌ Mot de passe incorrect!');
+            const email = prompt('📧 Email administrateur:');
+            if (!email) {
                 window.location.href = window.location.pathname;
-            } else {
-                window.location.href = window.location.pathname;
+                return;
             }
+            
+            const password = prompt('🔐 Mot de passe:');
+            if (!password) {
+                window.location.href = window.location.pathname;
+                return;
+            }
+
+            document.getElementById('loading-screen').classList.remove('hidden');
+            
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    currentUser = userCredential.user;
+                    showPage('admin-page');
+                    loadAdminData();
+                    window.history.pushState({}, '', '?admin');
+                    document.getElementById('loading-screen').classList.add('hidden');
+                })
+                .catch((error) => {
+                    document.getElementById('loading-screen').classList.add('hidden');
+                    alert('❌ Authentification échouée: ' + error.message);
+                    window.location.href = window.location.pathname;
+                });
         }
 
         function logout() {
-            window.location.href = window.location.pathname + '?messages';
+            auth.signOut().then(() => {
+                currentUser = null;
+                window.location.href = window.location.pathname + '?messages';
+            });
         }
 
         function switchTab(tab) {
@@ -934,7 +1043,9 @@
             setTimeout(() => document.getElementById('toast').classList.remove('show'), 3000);
         }
 
+        // ==========================================
         // MESSAGE FORM
+        // ==========================================
         document.querySelectorAll('.category-option').forEach(option => {
             option.addEventListener('click', function() {
                 document.querySelectorAll('.category-option').forEach(opt => opt.classList.remove('selected'));
@@ -946,27 +1057,41 @@
         document.getElementById('message-form').addEventListener('submit', function(e) {
             e.preventDefault();
             const category = document.getElementById('msg-category').value;
-            if (!category) { alert('Veuillez sélectionner une catégorie'); return; }
+            if (!category) { 
+                alert('Veuillez sélectionner une catégorie'); 
+                return; 
+            }
+
+            const submitBtn = document.getElementById('msg-submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = '📤 Envoi en cours...';
 
             const data = {
-                id: Date.now(),
                 category: category,
                 sender: document.getElementById('msg-name').value || 'Anonyme',
                 message: document.getElementById('msg-text').value,
-                timestamp: new Date().toISOString(),
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                 read: false
             };
 
-            let messages = JSON.parse(localStorage.getItem('emme_messages') || '[]');
-            messages.unshift(data);
-            localStorage.setItem('emme_messages', JSON.stringify(messages));
-
-            showToast('Message envoyé avec succès!');
-            this.reset();
-            document.querySelectorAll('.category-option').forEach(opt => opt.classList.remove('selected'));
+            db.collection('messages').add(data)
+                .then(() => {
+                    showToast('Message envoyé avec succès!');
+                    document.getElementById('message-form').reset();
+                    document.querySelectorAll('.category-option').forEach(opt => opt.classList.remove('selected'));
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = '📤 Envoyer';
+                })
+                .catch((error) => {
+                    alert('Erreur: ' + error.message);
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = '📤 Envoyer';
+                });
         });
 
+        // ==========================================
         // VISITOR FORM
+        // ==========================================
         document.querySelectorAll('input[name="jesus"]').forEach(radio => {
             radio.addEventListener('change', function() {
                 document.getElementById('jesus-followup').style.display = 
@@ -987,55 +1112,79 @@
         document.getElementById('visitor-form').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const formData = new FormData(this);
-            const data = {
-                id: Date.now(),
-                date: new Date().toLocaleDateString('fr-CA'),
-                heure: new Date().toLocaleTimeString('fr-CA', { hour: '2-digit', minute: '2-digit' }),
-                timestamp: new Date().toISOString()
-            };
-            
-            for (let [key, value] of formData.entries()) {
-                data[key] = value;
-            }
+            const submitBtn = document.getElementById('visitor-submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Envoi en cours...';
 
             const followupChecked = Array.from(document.querySelectorAll('input[name="followup"]:checked'))
                 .map(cb => cb.value);
-            data.followup = followupChecked.join(', ');
 
-            let visitors = JSON.parse(localStorage.getItem('emme_visitors') || '[]');
-            visitors.push(data);
-            localStorage.setItem('emme_visitors', JSON.stringify(visitors));
+            const data = {
+                nom: document.getElementById('nom').value,
+                prenom: document.getElementById('prenom').value,
+                adresse: document.getElementById('adresse').value,
+                ville: document.getElementById('ville').value,
+                code_postal: document.getElementById('code_postal').value,
+                telephone: document.getElementById('telephone').value,
+                courriel: document.getElementById('courriel').value,
+                sexe: document.querySelector('input[name="sexe"]:checked')?.value,
+                jesus: document.querySelector('input[name="jesus"]:checked')?.value,
+                followup: followupChecked.join(', '),
+                membre: document.querySelector('input[name="membre"]:checked')?.value || '',
+                connaissance: document.getElementById('connaissance').value,
+                reference: document.getElementById('reference').value,
+                communication: document.querySelector('input[name="communication"]:checked')?.value,
+                commentaires: document.getElementById('commentaires').value,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            };
 
-            const successMsg = document.getElementById('success-msg');
-            successMsg.innerHTML = `
-                <strong>✅ Merci ${data.prenom} ${data.nom}!</strong><br>
-                Votre formulaire a été soumis avec succès. Nous sommes ravis de votre visite!
-            `;
-            successMsg.style.display = 'block';
-            
-            this.reset();
-            document.getElementById('jesus-followup').style.display = 'none';
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            setTimeout(() => {
-                successMsg.style.display = 'none';
-            }, 8000);
+            db.collection('visitors').add(data)
+                .then(() => {
+                    const successMsg = document.getElementById('success-msg');
+                    successMsg.innerHTML = `
+                        <strong>✅ Merci ${data.prenom} ${data.nom}!</strong><br>
+                        Votre formulaire a été soumis avec succès. Nous sommes ravis de votre visite!
+                    `;
+                    successMsg.style.display = 'block';
+                    
+                    document.getElementById('visitor-form').reset();
+                    document.getElementById('jesus-followup').style.display = 'none';
+                    
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Soumettre le Formulaire';
+                    
+                    setTimeout(() => {
+                        successMsg.style.display = 'none';
+                    }, 8000);
+                })
+                .catch((error) => {
+                    alert('Erreur: ' + error.message);
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Soumettre le Formulaire';
+                });
         });
 
-        // ADMIN
+        // ==========================================
+        // ADMIN FUNCTIONS
+        // ==========================================
         function loadAdminData() {
-            const messages = JSON.parse(localStorage.getItem('emme_messages') || '[]');
-            const visitors = JSON.parse(localStorage.getItem('emme_visitors') || '[]');
-            previousCounts = { messages: messages.length, visitors: visitors.length };
+            db.collection('messages').get().then(snapshot => {
+                previousCounts.messages = snapshot.size;
+            });
+            db.collection('visitors').get().then(snapshot => {
+                previousCounts.visitors = snapshot.size;
+            });
             
             loadMessages();
             loadVisitorsData();
             
             setInterval(() => {
                 checkForNewData();
-                loadMessages();
+                if (currentMessageFilter === 'all' || currentMessageFilter === 'unread') {
+                    loadMessages();
+                }
                 loadVisitorsData();
             }, 5000);
         }
@@ -1044,28 +1193,39 @@
             currentMessageFilter = filter;
             document.querySelectorAll('.filter-tab').forEach(tab => tab.classList.remove('active'));
             event.target.classList.add('active');
-            displayMessages();
+            loadMessages();
         }
 
         function markAsRead(messageId) {
-            let messages = JSON.parse(localStorage.getItem('emme_messages') || '[]');
-            const message = messages.find(m => m.id === messageId);
-            if (message) {
-                message.read = true;
-                localStorage.setItem('emme_messages', JSON.stringify(messages));
+            db.collection('messages').doc(messageId).update({
+                read: true
+            }).then(() => {
                 loadMessages();
-            }
+            }).catch(error => {
+                console.error('Error:', error);
+            });
         }
 
         function loadMessages() {
-            allMessages = JSON.parse(localStorage.getItem('emme_messages') || '[]');
-            
-            document.getElementById('stat-msg-total').textContent = allMessages.length;
-            document.getElementById('stat-msg-unread').textContent = allMessages.filter(m => !m.read).length;
-            document.getElementById('stat-msg-prayer').textContent = allMessages.filter(m => m.category === 'prayer').length;
-            document.getElementById('stat-msg-urgent').textContent = allMessages.filter(m => m.category === 'urgent').length;
+            let query = db.collection('messages').orderBy('timestamp', 'desc');
 
-            displayMessages();
+            query.get().then((snapshot) => {
+                allMessages = [];
+                snapshot.forEach((doc) => {
+                    allMessages.push({ id: doc.id, ...doc.data() });
+                });
+                
+                document.getElementById('stat-msg-total').textContent = allMessages.length;
+                document.getElementById('stat-msg-unread').textContent = allMessages.filter(m => !m.read).length;
+                document.getElementById('stat-msg-prayer').textContent = allMessages.filter(m => m.category === 'prayer').length;
+                document.getElementById('stat-msg-urgent').textContent = allMessages.filter(m => m.category === 'urgent').length;
+
+                displayMessages();
+            }).catch((error) => {
+                console.error('Error loading messages:', error);
+                document.getElementById('messages-list').innerHTML = 
+                    '<div class="no-data">❌ Erreur de chargement</div>';
+            });
         }
 
         function displayMessages() {
@@ -1096,7 +1256,7 @@
             };
 
             list.innerHTML = filtered.map(msg => {
-                const date = new Date(msg.timestamp);
+                const date = msg.timestamp ? msg.timestamp.toDate() : new Date();
                 return `
                     <div class="data-item" style="background: ${!msg.read ? '#f0f9ff' : 'white'};">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
@@ -1110,24 +1270,39 @@
                         </div>
                         <div style="font-weight: 600; margin-bottom: 8px; color: #475569;">De: ${msg.sender}</div>
                         <div style="color: #64748b; line-height: 1.6; margin-bottom: 12px;">${msg.message}</div>
-                        ${!msg.read ? `<button onclick="markAsRead(${msg.id})" style="background: #667eea; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;">✓ Marquer comme lu</button>` : ''}
+                        ${!msg.read ? `<button onclick="markAsRead('${msg.id}')" style="background: #667eea; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;">✓ Marquer comme lu</button>` : ''}
                     </div>
                 `;
             }).join('');
         }
 
         function loadVisitorsData() {
-            allVisitors = JSON.parse(localStorage.getItem('emme_visitors') || '[]');
-            filteredVisitors = [...allVisitors];
-            updateStatistics();
-            displayVisitors();
+            db.collection('visitors').orderBy('timestamp', 'desc').get()
+                .then((snapshot) => {
+                    allVisitors = [];
+                    snapshot.forEach((doc) => {
+                        allVisitors.push({ id: doc.id, ...doc.data() });
+                    });
+                    filteredVisitors = [...allVisitors];
+                    updateStatistics();
+                    displayVisitors();
+                })
+                .catch((error) => {
+                    console.error('Error loading visitors:', error);
+                    document.getElementById('visitors-list-content').innerHTML = 
+                        '<div class="no-data">❌ Erreur de chargement</div>';
+                });
         }
 
         function updateStatistics() {
             const total = allVisitors.length;
-            const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toLocaleDateString('fr-CA');
+            const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
             
-            const thisWeek = allVisitors.filter(v => v.date >= weekAgo).length;
+            const thisWeek = allVisitors.filter(v => {
+                const vDate = v.timestamp ? v.timestamp.toDate() : new Date();
+                return vDate >= weekAgo;
+            }).length;
+            
             const newConverts = allVisitors.filter(v => v.jesus === 'Non').length;
             const potentialMembers = allVisitors.filter(v => v.membre === 'Oui').length;
 
@@ -1145,11 +1320,13 @@
 
             filteredVisitors = allVisitors.filter(visitor => {
                 if (period !== 'all') {
-                    const visitorDate = new Date(visitor.date);
+                    const visitorDate = visitor.timestamp ? visitor.timestamp.toDate() : new Date();
                     const now = new Date();
                     
                     if (period === 'today') {
-                        if (visitor.date !== now.toLocaleDateString('fr-CA')) return false;
+                        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                        const vDate = new Date(visitorDate.getFullYear(), visitorDate.getMonth(), visitorDate.getDate());
+                        if (vDate.getTime() !== today.getTime()) return false;
                     } else if (period === 'week') {
                         const weekAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
                         if (visitorDate < weekAgo) return false;
@@ -1159,7 +1336,7 @@
                     }
                 }
 
-                if (jesus !== 'all' && visitor.jesus.toLowerCase() !== jesus) return false;
+                if (jesus !== 'all' && visitor.jesus?.toLowerCase() !== jesus) return false;
 
                 if (member !== 'all') {
                     if (!visitor.membre) return false;
@@ -1189,13 +1366,13 @@
                 return;
             }
 
-            container.innerHTML = filteredVisitors
-                .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-                .map(visitor => `
+            container.innerHTML = filteredVisitors.map(visitor => {
+                const date = visitor.timestamp ? visitor.timestamp.toDate() : new Date();
+                return `
                     <div class="visitor-card">
                         <div class="visitor-header">
                             <div class="visitor-name">${visitor.prenom} ${visitor.nom}</div>
-                            <div class="visitor-date">📅 ${visitor.date} à ${visitor.heure || 'N/A'}</div>
+                            <div class="visitor-date">📅 ${date.toLocaleDateString('fr-FR')} à ${date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</div>
                         </div>
                         <div class="visitor-details">
                             <div class="detail-row">
@@ -1252,7 +1429,8 @@
                             </div>` : ''}
                         </div>
                     </div>
-                `).join('');
+                `;
+            }).join('');
         }
 
         function exportToCSV() {
@@ -1267,11 +1445,16 @@
                 'Devenir membre', 'Communication', 'Comment connu', 'Référence', 'Commentaires'
             ];
 
-            const rows = filteredVisitors.map(v => [
-                v.date, v.heure || '', v.nom, v.prenom, v.sexe, v.telephone, v.courriel,
-                v.adresse, v.ville || '', v.code_postal, v.jesus, v.followup || '',
-                v.membre || '', v.communication, v.connaissance || '', v.reference || '', v.commentaires || ''
-            ]);
+            const rows = filteredVisitors.map(v => {
+                const date = v.timestamp ? v.timestamp.toDate() : new Date();
+                return [
+                    date.toLocaleDateString('fr-FR'),
+                    date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+                    v.nom, v.prenom, v.sexe, v.telephone, v.courriel,
+                    v.adresse, v.ville || '', v.code_postal, v.jesus, v.followup || '',
+                    v.membre || '', v.communication, v.connaissance || '', v.reference || '', v.commentaires || ''
+                ];
+            });
 
             let csvContent = '\uFEFF' + headers.join(',') + '\n';
             rows.forEach(row => {
