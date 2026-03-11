@@ -217,6 +217,49 @@
             background-clip: text;
         }
         .admin-subtitle { font-size: 14px; color: #64748b; }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .notification-bell {
+            position: relative;
+            background: #f8fafc;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s;
+        }
+        .notification-bell:hover {
+            background: #e2e8f0;
+            transform: scale(1.05);
+        }
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
         .logout-btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white; padding: 12px 24px; border: none;
@@ -255,6 +298,7 @@
         .stat-card {
             background: white; padding: 32px; border-radius: 20px;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
         }
         .stat-card:hover {
             transform: translateY(-8px);
@@ -299,6 +343,32 @@
             border: 1px solid #ced4da; border-radius: 5px;
         }
 
+        .filter-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+        .filter-tab {
+            padding: 12px 24px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: #64748b;
+            transition: all 0.3s;
+        }
+        .filter-tab:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+        .filter-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+
         .visitors-header {
             display: flex; justify-content: space-between;
             align-items: center; margin-bottom: 20px;
@@ -321,6 +391,9 @@
         .section-header {
             padding: 24px 32px; border-bottom: 1px solid #f1f5f9;
             background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .section-title-admin { font-size: 20px; font-weight: 700; }
 
@@ -364,6 +437,8 @@
         }
         .badge-success { background: #d4edda; color: #155724; }
         .badge-warning { background: #fff3cd; color: #856404; }
+        .badge-danger { background: #f8d7da; color: #721c24; }
+        .badge-info { background: #d1ecf1; color: #0c5460; }
 
         .toast {
             position: fixed; top: 24px; right: 24px;
@@ -391,6 +466,7 @@
             .form-row { grid-template-columns: 1fr; }
             .visitor-details { grid-template-columns: 1fr; }
             .filters-grid { grid-template-columns: 1fr; }
+            .filter-tabs { flex-wrap: wrap; }
         }
     </style>
 </head>
@@ -627,7 +703,13 @@
                     <h1>Famille ÉMMÉ</h1>
                     <div class="admin-subtitle">Tableau de bord</div>
                 </div>
-                <button class="logout-btn" onclick="logout()">Déconnexion</button>
+                <div class="header-actions">
+                    <button class="notification-bell" id="notification-btn" title="Notifications">
+                        🔔
+                        <span class="notification-badge" id="notification-badge" style="display: none;">0</span>
+                    </button>
+                    <button class="logout-btn" onclick="logout()">Déconnexion</button>
+                </div>
             </div>
         </div>
 
@@ -642,10 +724,33 @@
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-icon">📩</div>
-                        <div class="stat-label">Total Messages</div>
+                        <div class="stat-label">Total</div>
                         <div class="stat-value" id="stat-msg-total">0</div>
                     </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🆕</div>
+                        <div class="stat-label">Non Lus</div>
+                        <div class="stat-value" id="stat-msg-unread">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🙏</div>
+                        <div class="stat-label">Prières</div>
+                        <div class="stat-value" id="stat-msg-prayer">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🚨</div>
+                        <div class="stat-label">Urgences</div>
+                        <div class="stat-value" id="stat-msg-urgent">0</div>
+                    </div>
                 </div>
+
+                <div class="filter-tabs">
+                    <button class="filter-tab active" onclick="filterMessages('all')">📋 Tous</button>
+                    <button class="filter-tab" onclick="filterMessages('unread')">🆕 Non lus</button>
+                    <button class="filter-tab" onclick="filterMessages('urgent')">🚨 Urgences</button>
+                    <button class="filter-tab" onclick="filterMessages('prayer')">🙏 Prières</button>
+                </div>
+
                 <div class="data-section">
                     <div class="section-header">
                         <h3 class="section-title-admin">Messages reçus</h3>
@@ -659,7 +764,7 @@
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-icon">👥</div>
-                        <div class="stat-label">Total Visiteurs</div>
+                        <div class="stat-label">Total</div>
                         <div class="stat-value" id="total-visitors">0</div>
                     </div>
                     <div class="stat-card">
@@ -729,6 +834,55 @@
     <script>
         let allVisitors = [];
         let filteredVisitors = [];
+        let allMessages = [];
+        let currentMessageFilter = 'all';
+        let previousCounts = { messages: 0, visitors: 0 };
+
+        // AUDIO NOTIFICATION
+        function playNotificationSound() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 800;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.3);
+        }
+
+        // CHECK FOR NEW DATA
+        function checkForNewData() {
+            const messages = JSON.parse(localStorage.getItem('emme_messages') || '[]');
+            const visitors = JSON.parse(localStorage.getItem('emme_visitors') || '[]');
+            
+            const newMessages = messages.length - previousCounts.messages;
+            const newVisitors = visitors.length - previousCounts.visitors;
+            const totalNew = newMessages + newVisitors;
+            
+            if (totalNew > 0) {
+                playNotificationSound();
+                const badge = document.getElementById('notification-badge');
+                badge.textContent = totalNew;
+                badge.style.display = 'flex';
+                
+                showToast(`${totalNew} nouvelle${totalNew > 1 ? 's' : ''} notification${totalNew > 1 ? 's' : ''}!`);
+            }
+            
+            previousCounts.messages = messages.length;
+            previousCounts.visitors = visitors.length;
+        }
+
+        document.getElementById('notification-btn').addEventListener('click', function() {
+            const badge = document.getElementById('notification-badge');
+            badge.style.display = 'none';
+        });
 
         // ROUTING
         window.addEventListener('load', function() {
@@ -799,7 +953,8 @@
                 category: category,
                 sender: document.getElementById('msg-name').value || 'Anonyme',
                 message: document.getElementById('msg-text').value,
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
+                read: false
             };
 
             let messages = JSON.parse(localStorage.getItem('emme_messages') || '[]');
@@ -871,37 +1026,91 @@
 
         // ADMIN
         function loadAdminData() {
+            const messages = JSON.parse(localStorage.getItem('emme_messages') || '[]');
+            const visitors = JSON.parse(localStorage.getItem('emme_visitors') || '[]');
+            previousCounts = { messages: messages.length, visitors: visitors.length };
+            
             loadMessages();
             loadVisitorsData();
+            
             setInterval(() => {
+                checkForNewData();
                 loadMessages();
                 loadVisitorsData();
             }, 5000);
         }
 
-        function loadMessages() {
-            const messages = JSON.parse(localStorage.getItem('emme_messages') || '[]');
-            document.getElementById('stat-msg-total').textContent = messages.length;
+        function filterMessages(filter) {
+            currentMessageFilter = filter;
+            document.querySelectorAll('.filter-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            displayMessages();
+        }
 
+        function markAsRead(messageId) {
+            let messages = JSON.parse(localStorage.getItem('emme_messages') || '[]');
+            const message = messages.find(m => m.id === messageId);
+            if (message) {
+                message.read = true;
+                localStorage.setItem('emme_messages', JSON.stringify(messages));
+                loadMessages();
+            }
+        }
+
+        function loadMessages() {
+            allMessages = JSON.parse(localStorage.getItem('emme_messages') || '[]');
+            
+            document.getElementById('stat-msg-total').textContent = allMessages.length;
+            document.getElementById('stat-msg-unread').textContent = allMessages.filter(m => !m.read).length;
+            document.getElementById('stat-msg-prayer').textContent = allMessages.filter(m => m.category === 'prayer').length;
+            document.getElementById('stat-msg-urgent').textContent = allMessages.filter(m => m.category === 'urgent').length;
+
+            displayMessages();
+        }
+
+        function displayMessages() {
             const list = document.getElementById('messages-list');
-            if (messages.length === 0) {
+            
+            let filtered = allMessages;
+            if (currentMessageFilter === 'unread') {
+                filtered = allMessages.filter(m => !m.read);
+            } else if (currentMessageFilter === 'urgent') {
+                filtered = allMessages.filter(m => m.category === 'urgent');
+            } else if (currentMessageFilter === 'prayer') {
+                filtered = allMessages.filter(m => m.category === 'prayer');
+            }
+
+            if (filtered.length === 0) {
                 list.innerHTML = '<div class="no-data">📭 Aucun message</div>';
                 return;
             }
 
             const categoryIcons = { prayer: '🙏', question: '❓', testimony: '💡', urgent: '🚨', autre: '💬' };
             const categoryNames = { prayer: 'Prière', question: 'Question', testimony: 'Témoignage', urgent: 'Urgence', autre: 'Autre' };
+            const categoryColors = { 
+                prayer: 'badge-info', 
+                question: 'badge-warning', 
+                testimony: 'badge-success', 
+                urgent: 'badge-danger', 
+                autre: 'badge-secondary' 
+            };
 
-            list.innerHTML = messages.map(msg => {
+            list.innerHTML = filtered.map(msg => {
                 const date = new Date(msg.timestamp);
                 return `
-                    <div class="data-item">
+                    <div class="data-item" style="background: ${!msg.read ? '#f0f9ff' : 'white'};">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
-                            <span style="font-weight: 700; font-size: 16px;">${categoryIcons[msg.category] || '💬'} ${categoryNames[msg.category] || 'Autre'}</span>
+                            <div>
+                                <span class="badge ${categoryColors[msg.category] || 'badge-info'}" style="font-size: 14px; padding: 6px 12px;">
+                                    ${categoryIcons[msg.category] || '💬'} ${categoryNames[msg.category] || 'Autre'}
+                                </span>
+                                ${!msg.read ? '<span class="badge badge-danger" style="margin-left: 8px;">NOUVEAU</span>' : ''}
+                            </div>
                             <span style="color: #94a3b8; font-size: 14px;">${date.toLocaleString('fr-FR')}</span>
                         </div>
                         <div style="font-weight: 600; margin-bottom: 8px; color: #475569;">De: ${msg.sender}</div>
-                        <div style="color: #64748b; line-height: 1.6;">${msg.message}</div>
+                        <div style="color: #64748b; line-height: 1.6; margin-bottom: 12px;">${msg.message}</div>
+                        ${!msg.read ? `<button onclick="markAsRead(${msg.id})" style="background: #667eea; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;">✓ Marquer comme lu</button>` : ''}
                     </div>
                 `;
             }).join('');
