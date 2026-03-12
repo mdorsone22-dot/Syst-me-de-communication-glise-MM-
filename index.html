@@ -784,6 +784,11 @@
                         <div class="stat-value" id="stat-msg-prayer">0</div>
                     </div>
                     <div class="stat-card">
+                        <div class="stat-icon">❓</div>
+                        <div class="stat-label">Questions</div>
+                        <div class="stat-value" id="stat-msg-question">0</div>
+                    </div>
+                    <div class="stat-card">
                         <div class="stat-icon">🚨</div>
                         <div class="stat-label">Urgences</div>
                         <div class="stat-value" id="stat-msg-urgent">0</div>
@@ -795,6 +800,7 @@
                     <button class="filter-tab" onclick="filterMessages('unread')">🆕 Non lus</button>
                     <button class="filter-tab" onclick="filterMessages('urgent')">🚨 Urgences</button>
                     <button class="filter-tab" onclick="filterMessages('prayer')">🙏 Prières</button>
+                    <button class="filter-tab" onclick="filterMessages('question')">❓ Questions</button>
                 </div>
 
                 <div class="data-section">
@@ -1216,6 +1222,7 @@
                 document.getElementById('stat-msg-total').textContent = allMessages.length;
                 document.getElementById('stat-msg-unread').textContent = allMessages.filter(m => !m.read).length;
                 document.getElementById('stat-msg-prayer').textContent = allMessages.filter(m => m.category === 'prayer').length;
+                document.getElementById('stat-msg-question').textContent = allMessages.filter(m => m.category === 'question').length;
                 document.getElementById('stat-msg-urgent').textContent = allMessages.filter(m => m.category === 'urgent').length;
 
                 displayMessages();
@@ -1236,6 +1243,8 @@
                 filtered = allMessages.filter(m => m.category === 'urgent');
             } else if (currentMessageFilter === 'prayer') {
                 filtered = allMessages.filter(m => m.category === 'prayer');
+            } else if (currentMessageFilter === 'question') {
+                filtered = allMessages.filter(m => m.category === 'question');
             }
 
             if (filtered.length === 0) {
