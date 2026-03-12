@@ -907,13 +907,6 @@
         let previousCounts = { messages: 0, visitors: 0 };
         let currentUser = null;
 
-        // Hide loading screen when page loads
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                document.getElementById('loading-screen').classList.add('hidden');
-            }, 500);
-        });
-
         // ==========================================
         // NOTIFICATION SOUND
         // ==========================================
@@ -976,6 +969,11 @@
         // ROUTING
         // ==========================================
         window.addEventListener('load', function() {
+            // Hide loading screen first
+            setTimeout(() => {
+                document.getElementById('loading-screen').classList.add('hidden');
+            }, 500);
+
             const params = new URLSearchParams(window.location.search);
             if (params.has('admin')) {
                 showAdminLogin();
