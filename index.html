@@ -1210,6 +1210,19 @@
             });
         }
 
+        function deleteMessage(messageId) {
+            if (confirm('⚠️ Èske w sèten ou vle siprime mesaj sa a?')) {
+                db.collection('messages').doc(messageId).delete()
+                    .then(() => {
+                        showToast('Mesaj siprime!');
+                        loadMessages();
+                    })
+                    .catch((error) => {
+                        alert('Erè: ' + error.message);
+                    });
+            }
+        }
+
         function loadMessages() {
             let query = db.collection('messages').orderBy('timestamp', 'desc');
 
@@ -1277,7 +1290,10 @@
                         </div>
                         <div style="font-weight: 600; margin-bottom: 8px; color: #475569;">De: ${msg.sender}</div>
                         <div style="color: #64748b; line-height: 1.6; margin-bottom: 12px;">${msg.message}</div>
-                        ${!msg.read ? `<button onclick="markAsRead('${msg.id}')" style="background: #667eea; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;">✓ Marquer comme lu</button>` : ''}
+                        <div style="display: flex; gap: 10px;">
+                            ${!msg.read ? `<button onclick="markAsRead('${msg.id}')" style="background: #667eea; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;">✓ Marquer comme lu</button>` : ''}
+                            <button onclick="deleteMessage('${msg.id}')" style="background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;">🗑️ Supprimer</button>
+                        </div>
                     </div>
                 `;
             }).join('');
@@ -1435,9 +1451,25 @@
                                 <span class="detail-value">${visitor.commentaires}</span>
                             </div>` : ''}
                         </div>
+                        <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #e9ecef;">
+                            <button onclick="deleteVisitor('${visitor.id}')" style="background: #ef4444; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600;">🗑️ Supprimer ce visiteur</button>
+                        </div>
                     </div>
                 `;
             }).join('');
+        }
+
+        function deleteVisitor(visitorId) {
+            if (confirm('⚠️ Èske w sèten ou vle siprime vizitè sa a? Aksyon sa a pa ka defèt!')) {
+                db.collection('visitors').doc(visitorId).delete()
+                    .then(() => {
+                        showToast('Vizitè siprime!');
+                        loadVisitorsData();
+                    })
+                    .catch((error) => {
+                        alert('Erè: ' + error.message);
+                    });
+            }
         }
 
         function exportToCSV() {
